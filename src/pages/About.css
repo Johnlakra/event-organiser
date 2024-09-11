@@ -1,0 +1,72 @@
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.main-title {
+    color: #0e1b4d;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #f82249;
+    border-bottom: 2px solid #f82249;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+li:before {
+    content: "•";
+    color: #f82249;
+    position: absolute;
+    left: 0;
+}
+
+.contact,
+.about-icym {
+    background-color: #f6f7fd;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 30px;
+}
+
+.contact-details {
+    margin-top: 15px;
+}
+
+.contact-details p {
+    margin: 5px 0;
+}
+
+.contact-details a {
+    color: #f82249;
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .about-container {
+        padding: 10px;
+    }
+}

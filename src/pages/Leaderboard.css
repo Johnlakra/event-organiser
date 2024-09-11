@@ -1,0 +1,9 @@
+.leaderboard-page .page-content {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .leaderboard-page .page-content {
+        padding: 0 10px;
+    }
+}

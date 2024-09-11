@@ -1,0 +1,17 @@
+.home {
+    composes: page-container from '../SharedPageStyles.css';
+}
+
+.welcome-title {
+    composes: page-title from '../SharedPageStyles.css';
+}
+
+.home-content {
+    width: 100%;
+}
+
+.mobile-section-header {
+    display: block;
+    margin-bottom: 20px;
+    text-align: center;
+}

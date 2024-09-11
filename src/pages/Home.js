@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import LiveEvents from '../components/LiveEvents';
+import React, { useState, useEffect } from "react";
+import LiveEvents from "../components/LiveEvents";
+import "./Home.css";
+import "../SharedPageStyles.css";
 
 const Home = () => {
   const [liveEvents, setLiveEvents] = useState([]);
@@ -21,9 +23,14 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Welcome to BSMCSM 2024</h1>
-      <LiveEvents events={liveEvents} />
+    <div className="home">
+      <h1 className="welcome-title">Welcome to BSMCSM 2024</h1>
+      <div className="mobile-section-header">
+        <h2>Live Events</h2>
+      </div>
+      <div className="home-content">
+        <LiveEvents events={liveEvents} />
+      </div>
     </div>
   );
 };

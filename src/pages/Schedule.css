@@ -1,0 +1,131 @@
+.schedule {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.schedule-title {
+    text-align: center;
+    color: #0e1b4d;
+    margin-bottom: 30px;
+}
+
+.current-events-banner,
+.today-events {
+    background-color: #f82249;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.current-events-banner h2,
+.today-events h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.current-event,
+.event {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.time {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.event-name {
+    margin-right: 10px;
+}
+
+.venue {
+    font-style: italic;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    background-color: #f6f7fd;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #0e1b4d;
+    transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #e0e3f4;
+}
+
+.tab.active {
+    background-color: #0e1b4d;
+    color: white;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #0e1b4d;
+}
+
+.timeline-event {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-point {
+    position: absolute;
+    left: -34px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: #f82249;
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.event-content {
+    background-color: #f6f7fd;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab {
+        margin-bottom: 5px;
+    }
+
+    .timeline {
+        padding-left: 20px;
+    }
+
+    .timeline-point {
+        left: -24px;
+    }
+}
