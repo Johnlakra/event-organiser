@@ -7,6 +7,7 @@ import Events from './pages/Events';
 import Leaderboard from './pages/Leaderboard';
 import Schedule from './pages/Schedule';
 import About from './pages/About';
+import Admin from './pages/Admin/Admin'; // Update this import
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/about" element={<About />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
         <Footer />

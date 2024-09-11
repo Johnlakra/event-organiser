@@ -1,0 +1,117 @@
+.admin-login {
+    max-width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+  
+  .admin-login input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .admin-login button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0e1b4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .admin-panel {
+    padding: 20px;
+  }
+  
+  .tabs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .tabs button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .tabs button.active {
+    background-color: #0e1b4d;
+    color: white;
+  }
+  
+  .live-events-form .venue-form {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+  
+  .live-events-form input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .leaderboard-form .leaderboard-grid {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  .leaderboard-form .events-column {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  .leaderboard-form .header-cell,
+  .leaderboard-form .event-cell,
+  .leaderboard-form .position-cell {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .leaderboard-form .header-cell {
+    font-weight: bold;
+    background-color: #f0f0f0;
+  }
+  
+  .leaderboard-form select {
+    width: 100%;
+  }
+  
+  .leaderboard-form .totals-row {
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .leaderboard-form .total-label,
+  .leaderboard-form .total-cell {
+    width: 150px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    font-weight: bold;
+  }
+  
+  .leaderboard-form .points-legend {
+    margin-bottom: 10px;
+  }
+  
+  .leaderboard-form .points-legend span {
+    margin-right: 10px;
+  }
+  
+  button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0e1b4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
