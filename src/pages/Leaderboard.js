@@ -1,49 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import LeaderBoard from "../components/LeaderBoard";
 import "./Leaderboard.css";
 import "../SharedPageStyles.css";
+import { useDispatch } from "react-redux";
+import { getLeaderBoardItems } from "../redux/leaderBoard/leaderBoardSlice";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
+  // const { data } = useSelector(leaderBoardState);
+  const dispatch = useDispatch();
+
+  const fetchList = useCallback(async () => {
+    try {
+      // Loader here
+      const result = await dispatch(getLeaderBoardItems());
+      if (result?.error) {
+        // Show Error
+      } else {
+        const grouped = result?.payload?.reduce((acc, item) => {
+          if (!acc[item.denerary]) acc[item.denerary] = [];
+          acc[item.denerary].push(item);
+          return acc;
+        }, {});
+        const data = Object.entries(grouped).map(([key, value], index) => {
+          const events = value.map((item) => ({
+            id: item.id,
+            name: item.event,
+            position: item.position,
+            points: item.point,
+          }));
+          return { events, name: key, id: index + 1 };
+        });
+        setLeaderboardData(data);
+      }
+    } catch (error) {
+      // Show Error
+    } finally {
+      // Loader off
+    }
+  }, [dispatch]);
 
   useEffect(() => {
-    // Fetch leaderboard data
-    const fetchLeaderboardData = async () => {
-      const dummyData = [
-        {
-          id: 1,
-          name: "Deanery 1",
-          events: [
-            { name: "100m", position: "I", points: 15 },
-            { name: "Basketball", position: "II", points: 10 },
-            { name: "Group Song", position: "III", points: 5 },
-          ],
-        },
-        {
-          id: 2,
-          name: "Deanery 2",
-          events: [
-            { name: "100m", position: "I", points: 15 },
-            { name: "Basketball", position: "II", points: 10 },
-            { name: "Group Song", position: "III", points: 5 },
-          ],
-        },
-        {
-          id: 3,
-          name: "Deanery 3",
-          events: [
-            { name: "100m", position: "I", points: 15 },
-            { name: "Basketball", position: "II", points: 10 },
-            { name: "Group Song", position: "III", points: 5 },
-          ],
-        },
-        // ... add more deaneries up to 16
-      ];
-      setLeaderboardData(dummyData);
-    };
-
-    fetchLeaderboardData();
-  }, []);
+    fetchList();
+  }, [fetchList]);
 
   return (
     <div className="page-container leaderboard-page">
