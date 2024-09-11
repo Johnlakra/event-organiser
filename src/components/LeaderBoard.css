@@ -1,0 +1,76 @@
+.leaderboard {
+    padding: 20px 0;
+    background-color: #f6f7fd;
+  }
+  
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  .section-header {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #0e1b4d;
+  }
+  
+  .leaderboard-content {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .deanery-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  .deanery-button {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    background-color: #f82249;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .deanery-details {
+    margin-top: 10px;
+    overflow-x: auto;
+  }
+  
+  .deanery-details table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .deanery-details th,
+  .deanery-details td {
+    padding: 10px;
+    text-align: left;
+    border-top: 1px solid #ddd;
+  }
+  
+  .deanery-details th {
+    background-color: #f6f7fd;
+  }
+  
+  .deanery-details td:nth-child(2) {
+    text-align: center;
+  }
+  
+  .deanery-details td:nth-child(3) {
+    text-align: right;
+  }
