@@ -71,7 +71,7 @@
 
 .tab.active {
     background-color: #0e1b4d;
-    color: white;
+    color: white !important;
 }
 
 .timeline {
