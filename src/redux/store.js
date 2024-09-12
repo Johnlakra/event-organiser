@@ -6,5 +6,6 @@ export default configureStore({
   reducer: {
     leaderBoardSlice,
     dropdownSlice,
+    liveonstageSlice
   },
 });
