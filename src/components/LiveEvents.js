@@ -10,18 +10,18 @@ const LiveEvents = ({ events }) => {
           {events.map((event) => (
             <div
               key={event.id}
-              className={`event-card ${event.onLive ? "live" : ""}`}
+              className={`event-card ${event.live ? "live" : ""}`}
             >
               <div className="event-details">
-                <h3>{event.currentEvent}</h3>
-                <p className="next-event">Next: {event.nextEvent}</p>
-                <p className="venue">{event.venue}</p>
-                {event.onLive && (
+                <h3>{event.current_event}</h3>
+                <p className="next-event">Next: {event.next_event}</p>
+                <p className="venue">{event.stage_name}</p>
+                {event.live ? (
                   <div className="live-indicator">
                     {/* <AlertCircle size={16} /> */}
                     <span>LIVE</span>
                   </div>
-                )}
+                ):null}
               </div>
             </div>
           ))}

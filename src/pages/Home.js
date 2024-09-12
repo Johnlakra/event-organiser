@@ -1,56 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import LiveEvents from "../components/LiveEvents";
 import "./Home.css";
 import "../SharedPageStyles.css";
+import { useDispatch } from "react-redux";
+import { getLiveOnStageItems } from "../redux/liveonstage/liveonstageSlice";
 
 const Home = () => {
   const [liveEvents, setLiveEvents] = useState([]);
+  const dispatch = useDispatch();
+
+  const fetchLiveOnStage = useCallback(async () => {
+    try {
+      // Loader here
+      const result = await dispatch(getLiveOnStageItems());
+      if (result?.error) {
+        // Show Error
+      } else {
+        console.log(result?.payload);
+        setLiveEvents(result?.payload);
+      }
+    } catch (error) {
+      // Show Error
+    } finally {
+      // Loader off
+    }
+  }, [dispatch])
 
   useEffect(() => {
     // Fetch live events data
-    const fetchLiveEvents = async () => {
-      const dummyEvents = [
-        {
-          id: 1,
-          venue: "Stage 1",
-          currentEvent: "Group Song (Indian)",
-          nextEvent: "Mono Act",
-          onLive: true,
-        },
-        {
-          id: 2,
-          venue: "Stage 2",
-          currentEvent: "Essay Writing",
-          nextEvent: "Extempore",
-          onLive: false,
-        },
-        {
-          id: 3,
-          venue: "Stage 3",
-          currentEvent: "Fancy Dress",
-          nextEvent: "Classical Solo Dance",
-          onLive: true,
-        },
-        {
-          id: 4,
-          venue: "Stage 4",
-          currentEvent: "Water Color Painting",
-          nextEvent: "Pencil Drawing",
-          onLive: false,
-        },
-        {
-          id: 5,
-          venue: "Main Ground",
-          currentEvent: "100m Finals",
-          nextEvent: "200m Heats",
-          onLive: true,
-        },
-      ];
-      setLiveEvents(dummyEvents);
-    };
-
-    fetchLiveEvents();
-  }, []);
+    fetchLiveOnStage();
+  }, [fetchLiveOnStage]);
 
   return (
     <div className="home">
