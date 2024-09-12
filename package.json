@@ -1,7 +1,6 @@
 {
   "name": "event-organiser",
   "version": "0.1.0",
-  "proxy": "http://eventbe-production.up.railway.app/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",

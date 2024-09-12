@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../config";
 
 export const api = async (method, endpoint, data = null) => {
   const reqConfig = {
@@ -6,7 +7,7 @@ export const api = async (method, endpoint, data = null) => {
       "Content-Type": "application/json",
     },
   };
-  const url = `${endpoint}`;
+  const url = `${config.apiEndPoint}${endpoint}`;
   try {
     let response;
     switch (method.toLowerCase()) {
