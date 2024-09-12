@@ -9,6 +9,14 @@ export const getLiveOnStageItems = createAsyncThunk(
   }
 );
 
+export const addBatchStage = createAsyncThunk(
+  "liveonstage/addItem",
+  async (payload) => {
+    const response = await api("POST", "liveonstage/batch", payload);
+    return response;
+  }
+);
+
 export const liveonstageSlice = createSlice({
   name: "liveonstage",
   initialState: {

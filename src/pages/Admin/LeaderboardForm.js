@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Check } from "lucide-react";
 import "./LeaderboardForm.css";
 import { useDispatch, useSelector } from "react-redux";
-import { dropdownState, getDropdown } from "../../redux/dropdown/dropdownSlice";
+import { dropdownState } from "../../redux/dropdown/dropdownSlice";
+import { addBatchBoardItem } from "../../redux/leaderBoard/leaderBoardSlice";
 
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
@@ -15,9 +16,7 @@ const LeaderboardForm = () => {
     parish: data.parish,
   });
 
-  // console.log(formData, "formData");
   const handlePositionChange = (event, position, field, value) => {
-    // console.log({ event, position, field, value }, "Values");
     setFormData((prevData) => ({
       ...prevData,
       [event]: {
@@ -25,21 +24,33 @@ const LeaderboardForm = () => {
         [position]: {
           ...prevData[event]?.[position],
           [field]: value,
+          event,
+          position,
         },
       },
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //   {
-    //     "denerary_id": 3,
-    //     "parish_id": 17,
-    //     "event_id": 5,
-    //     "position_id": 3
-    // }
-    // console.log(JSON.stringify(formData, null, 2));
-    alert("Leaderboard data submitted successfully!");
+    const payload = Object.entries(formData).flatMap(([key, value]) => {
+      return Object.entries(value).map(([key, value]) => ({
+        denerary_id: value.deanery,
+        parish_id: value.parish,
+        event_id: value.event,
+        position_id: value.position,
+      }));
+    });
+    console.log(payload, "payload");
+    // post api
+    try {
+      // Loader here
+      await dispatch(addBatchBoardItem(payload));
+    } catch (error) {
+      // Show Error
+    } finally {
+      // Loader off
+    }
   };
 
   const renderPositions = (type) => {
@@ -68,31 +79,21 @@ const LeaderboardForm = () => {
   };
 
   const fetchDropdowns = useCallback(async () => {
-    try {
-      const result = await dispatch(getDropdown());
-      if (result?.error) {
-      } else {
-        const places = result?.payload.places;
-        const denerary = result?.payload.denerary;
-        const parish = result?.payload.parish;
-        const events = result?.payload.events.map((item) => ({
-          ...item,
-          expandEvent: false,
-        }));
-        setRender((prev) => ({
-          ...prev,
-          events,
-          places,
-          denerary,
-          parish,
-        }));
-      }
-    } catch (error) {
-      // Show Error
-    } finally {
-      // Loader off
-    }
-  }, [dispatch]);
+    const places = data.places;
+    const denerary = data.denerary;
+    const parish = data.parish;
+    const events = data.events.map((item) => ({
+      ...item,
+      expandEvent: false,
+    }));
+    setRender((prev) => ({
+      ...prev,
+      events,
+      places,
+      denerary,
+      parish,
+    }));
+  }, [data.denerary, data.events, data.parish, data.places]);
 
   useEffect(() => {
     fetchDropdowns();

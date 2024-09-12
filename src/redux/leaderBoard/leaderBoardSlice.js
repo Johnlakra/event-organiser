@@ -9,6 +9,14 @@ export const getLeaderBoardItems = createAsyncThunk(
   }
 );
 
+export const addBatchBoardItem = createAsyncThunk(
+  "leaderBoard/getItems",
+  async (payload) => {
+    const response = await api("POST", "leaderBoard/batch", payload);
+    return response;
+  }
+);
+
 export const leaderBoardSlice = createSlice({
   name: "leaderBoard",
   initialState: {

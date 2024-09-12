@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import LiveEventsForm from "./LiveEventsForm";
 import LeaderboardForm from "./LeaderboardForm";
 import "./Admin.css";
+import { useDispatch } from "react-redux";
+import { getDropdown } from "../../redux/dropdown/dropdownSlice";
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState("liveEvents");
+  const dispatch = useDispatch();
 
   const correctPassword = "your_secure_password"; // Replace with a secure password
 
@@ -19,22 +22,30 @@ const Admin = () => {
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="admin-login">
-        <h2>Admin Login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-          />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    );
-  }
+  const fetchDropdowns = useCallback(async () => {
+    await dispatch(getDropdown());
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
+
+  // if (!isAuthenticated) {
+  //   return (
+  //     <div className="admin-login">
+  //       <h2>Admin Login</h2>
+  //       <form onSubmit={handleLogin}>
+  //         <input
+  //           type="password"
+  //           value={password}
+  //           onChange={(e) => setPassword(e.target.value)}
+  //           placeholder="Enter password"
+  //         />
+  //         <button type="submit">Login</button>
+  //       </form>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="admin-panel">

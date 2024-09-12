@@ -16,6 +16,9 @@ export const dropdownSlice = createSlice({
     builder.addCase(getDropdown.fulfilled, (state, action) => {
       state.events = action.payload.events;
       state.places = action.payload.places;
+      state.denerary = action.payload.denerary;
+      state.parish = action.payload.parish;
+      state.stage = action.payload.stage;
     });
   },
 });
