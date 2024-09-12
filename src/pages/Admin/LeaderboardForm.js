@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Check } from "lucide-react";
 import "./LeaderboardForm.css";
+import { useDispatch, useSelector } from "react-redux";
+import { dropdownState, getDropdown } from "../../redux/dropdown/dropdownSlice";
 
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
-  const [expandedEvent, setExpandedEvent] = useState(null);
+  const dispatch = useDispatch();
+  const data = useSelector(dropdownState);
+  const [render, setRender] = useState({
+    events: data.events,
+    places: data.places,
+    denerary: data.denerary,
+    parish: data.parish,
+  });
 
+  // console.log(formData, "formData");
   const handlePositionChange = (event, position, field, value) => {
+    // console.log({ event, position, field, value }, "Values");
     setFormData((prevData) => ({
       ...prevData,
       [event]: {
@@ -21,98 +32,162 @@ const LeaderboardForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(formData, null, 2));
+    //   {
+    //     "denerary_id": 3,
+    //     "parish_id": 17,
+    //     "event_id": 5,
+    //     "position_id": 3
+    // }
+    // console.log(JSON.stringify(formData, null, 2));
     alert("Leaderboard data submitted successfully!");
   };
 
-  const toggleEvent = (event) => {
-    setExpandedEvent(expandedEvent === event ? null : event);
+  const renderPositions = (type) => {
+    return render.places.filter((item) => item.type === type);
   };
 
-  const isEventComplete = (event) => {
-    return ["I", "II", "III"].every(
-      (position) =>
-        formData[event]?.[position]?.deanery &&
-        formData[event]?.[position]?.parish
-    );
+  const toggleEvent = (event) =>
+    setRender((prev) => {
+      const events = prev.events.map((item) => {
+        if (item.id === event.id)
+          return { ...item, expandEvent: !item.expandEvent };
+        return { ...item, expandEvent: false };
+      });
+      return { ...prev, events };
+    });
+
+  const isEventComplete = (type, event) => {
+    return render.places
+      ?.filter((item) => item.type === type)
+      ?.map((item) => item.id)
+      .every(
+        (position) =>
+          formData[event]?.[position]?.deanery &&
+          formData[event]?.[position]?.parish
+      );
   };
+
+  const fetchDropdowns = useCallback(async () => {
+    try {
+      const result = await dispatch(getDropdown());
+      if (result?.error) {
+      } else {
+        const places = result?.payload.places;
+        const denerary = result?.payload.denerary;
+        const parish = result?.payload.parish;
+        const events = result?.payload.events.map((item) => ({
+          ...item,
+          expandEvent: false,
+        }));
+        setRender((prev) => ({
+          ...prev,
+          events,
+          places,
+          denerary,
+          parish,
+        }));
+      }
+    } catch (error) {
+      // Show Error
+    } finally {
+      // Loader off
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchDropdowns();
+  }, [fetchDropdowns]);
 
   return (
     <div className="leaderboard-form-container">
       <h1 className="leaderboard-form-title">Leaderboard Entry Form</h1>
       <form onSubmit={handleSubmit}>
-        {events.map((event, eventIndex) => (
-          <div key={event} className="event-item">
-            <button
-              type="button"
-              className="event-header"
-              onClick={() => toggleEvent(event)}
-            >
-              <span>{`${eventIndex + 1}. ${event}`}</span>
-              <div className="event-status">
-                {isEventComplete(event) && (
-                  <Check size={20} className="check-icon" />
-                )}
-                {expandedEvent === event ? (
-                  <ChevronUp size={20} />
-                ) : (
-                  <ChevronDown size={20} />
-                )}
-              </div>
-            </button>
-            {expandedEvent === event && (
-              <div className="event-details">
-                {["I", "II", "III"].map((position) => (
-                  <div key={position} className="position-item">
-                    <h4 className="position-title">Position {position}</h4>
-                    <select
-                      onChange={(e) =>
-                        handlePositionChange(
-                          event,
-                          position,
-                          "deanery",
-                          e.target.value
-                        )
-                      }
-                      value={formData[event]?.[position]?.deanery || ""}
-                      className="select-input"
-                    >
-                      <option value="">Select Deanery</option>
-                      {Object.keys(deaneries).map((deanery) => (
-                        <option key={deanery} value={deanery}>
-                          {deanery}
-                        </option>
-                      ))}
-                    </select>
-                    {formData[event]?.[position]?.deanery && (
-                      <select
-                        onChange={(e) =>
-                          handlePositionChange(
-                            event,
-                            position,
-                            "parish",
-                            e.target.value
-                          )
-                        }
-                        value={formData[event]?.[position]?.parish || ""}
-                        className="select-input"
-                      >
-                        <option value="">Select Parish</option>
-                        {deaneries[formData[event][position].deanery].map(
-                          (parish) => (
-                            <option key={parish} value={parish}>
-                              {parish}
+        {render.events.map((event, eventIndex) => {
+          return (
+            <div key={event.id} className="event-item">
+              <button
+                type="button"
+                className="event-header"
+                onClick={() => toggleEvent(event)}
+              >
+                <span>{`${eventIndex + 1}. ${event.name}`}</span>
+                <div className="event-status">
+                  {isEventComplete(event.type, event.id) && (
+                    <Check size={20} className="check-icon" />
+                  )}
+                  {event.expandEvent ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </div>
+              </button>
+              {event.expandEvent && (
+                <div className="event-details">
+                  {renderPositions(event.type).map((position) => {
+                    return (
+                      <div key={position.id} className="position-item">
+                        <h4 className="position-title">
+                          Position {position.name}
+                        </h4>
+                        <select
+                          onChange={(e) =>
+                            handlePositionChange(
+                              event.id,
+                              position.id,
+                              "deanery",
+                              e.target.value
+                            )
+                          }
+                          value={
+                            formData[event.id]?.[position.id]?.deanery || ""
+                          }
+                          className="select-input"
+                        >
+                          <option value="">Select Deanery</option>
+                          {render.denerary?.map((deanery) => (
+                            <option key={deanery.id} value={deanery.id}>
+                              {deanery.name}
                             </option>
-                          )
+                          ))}
+                        </select>
+                        {formData[event.id]?.[position.id]?.deanery && (
+                          <select
+                            onChange={(e) =>
+                              handlePositionChange(
+                                event.id,
+                                position.id,
+                                "parish",
+                                e.target.value
+                              )
+                            }
+                            value={
+                              formData[event.id]?.[position.id]?.parish || ""
+                            }
+                            className="select-input"
+                          >
+                            <option value="">Select Parish</option>
+                            {render.parish
+                              ?.filter(
+                                (item) =>
+                                  item.denerary_id ==
+                                  formData[event.id]?.[position.id]?.deanery
+                              )
+                              ?.map((parish) => (
+                                <option key={parish.id} value={parish.id}>
+                                  {parish.name}
+                                </option>
+                              ))}
+                          </select>
                         )}
-                      </select>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
         <button type="submit" className="submit-button">
           Submit Leaderboard
         </button>
