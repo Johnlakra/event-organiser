@@ -28,6 +28,7 @@ const Leaderboard = () => {
             name: item.event,
             position: item.position,
             points: item.point,
+            parish: item.parish
           }));
           return { events, name: key, id: index + 1 };
         });
