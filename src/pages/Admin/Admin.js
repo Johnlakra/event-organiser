@@ -30,22 +30,22 @@ const Admin = () => {
     fetchDropdowns();
   }, [fetchDropdowns]);
 
-  // if (!isAuthenticated) {
-  //   return (
-  //     <div className="admin-login">
-  //       <h2>Admin Login</h2>
-  //       <form onSubmit={handleLogin}>
-  //         <input
-  //           type="password"
-  //           value={password}
-  //           onChange={(e) => setPassword(e.target.value)}
-  //           placeholder="Enter password"
-  //         />
-  //         <button type="submit">Login</button>
-  //       </form>
-  //     </div>
-  //   );
-  // }
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-login">
+        <h2>Admin Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-panel">

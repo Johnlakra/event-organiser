@@ -41,7 +41,6 @@ const LeaderboardForm = () => {
         position_id: value.position,
       }));
     });
-    console.log(payload, "payload");
     // post api
     try {
       // Loader here

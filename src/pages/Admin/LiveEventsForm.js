@@ -23,7 +23,6 @@ const LiveEventsForm = () => {
     // stage_id, current_event, next_event, live
 
     const payload = Object.values(liveEvents);
-    console.log(payload, "payload");
     try {
       // Loader here
       await dispatch(addBatchStage(payload));

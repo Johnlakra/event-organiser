@@ -16,7 +16,6 @@ const Home = () => {
       if (result?.error) {
         // Show Error
       } else {
-        console.log(result?.payload);
         setLiveEvents(result?.payload);
       }
     } catch (error) {
@@ -24,7 +23,7 @@ const Home = () => {
     } finally {
       // Loader off
     }
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     // Fetch live events data
