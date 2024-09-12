@@ -22,9 +22,12 @@
     cursor: pointer;
   }
   
-  .admin-panel {
-    padding: 20px;
-  }
+.admin-panel {
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
   
   .tabs {
     display: flex;

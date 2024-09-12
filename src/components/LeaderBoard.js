@@ -1,53 +1,109 @@
 import React, { useState } from "react";
 import "./LeaderBoard.css";
 import "../SharedPageStyles.css";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const LeaderBoard = ({ data }) => {
   const [expandedDeanery, setExpandedDeanery] = useState(null);
+  const [expandedParish, setExpandedParish] = useState(null);
 
   const toggleDeanery = (id) => {
     setExpandedDeanery(expandedDeanery === id ? null : id);
+    setExpandedParish(null);
+  };
+
+  const toggleParish = (id) => {
+    setExpandedParish(expandedParish === id ? null : id);
   };
 
   const calculateTotalPoints = (events) => {
     return events.reduce((total, event) => total + event.points, 0);
   };
 
+  const sortedData = [...data].sort(
+    (a, b) => calculateTotalPoints(b.events) - calculateTotalPoints(a.events)
+  );
+
   return (
     <div className="leaderboard-container">
-      {data.map((deanery) => (
-        <div key={deanery.id} className="deanery-item">
-          <button
-            className="deanery-header"
-            onClick={() => toggleDeanery(deanery.id)}
-          >
-            <span>{deanery.name}</span>
-            <span>{calculateTotalPoints(deanery.events)} pts</span>
-          </button>
-          {expandedDeanery === deanery.id && (
-            <div className="deanery-details">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Event</th>
-                    <th>Position</th>
-                    <th>Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {deanery.events.map((event, index) => (
-                    <tr key={index}>
-                      <td>{event.name}</td>
-                      <td>{event.position}</td>
-                      <td>{event.points}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      ))}
+      {sortedData.map((deanery, deaneryIndex) => {
+        const deaneryTotalPoints = calculateTotalPoints(deanery.events);
+        const parishesData = deanery.events.reduce((acc, event) => {
+          if (!acc[event.parish]) {
+            acc[event.parish] = { events: [], totalPoints: 0 };
+          }
+          acc[event.parish].events.push(event);
+          acc[event.parish].totalPoints += event.points;
+          return acc;
+        }, {});
+
+        const sortedParishes = Object.entries(parishesData)
+          .sort(([, a], [, b]) => b.totalPoints - a.totalPoints)
+          .map(([parishName, parishData], index) => ({
+            id: `${deanery.id}-${index}`,
+            name: parishName,
+            ...parishData,
+          }));
+
+        return (
+          <div key={deanery.id} className="deanery-item">
+            <button
+              className="deanery-header"
+              onClick={() => toggleDeanery(deanery.id)}
+            >
+              <span>{`${deaneryIndex + 1}. ${deanery.name}`}</span>
+              <span>{deaneryTotalPoints} pts</span>
+              {expandedDeanery === deanery.id ? (
+                <ChevronUp size={20} />
+              ) : (
+                <ChevronDown size={20} />
+              )}
+            </button>
+            {expandedDeanery === deanery.id && (
+              <div className="deanery-details">
+                {sortedParishes.map((parish, parishIndex) => (
+                  <div key={parish.id} className="parish-item">
+                    <button
+                      className="parish-header"
+                      onClick={() => toggleParish(parish.id)}
+                    >
+                      <span>{`${parishIndex + 1}. ${parish.name}`}</span>
+                      <span>{parish.totalPoints} pts</span>
+                      {expandedParish === parish.id ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
+                    </button>
+                    {expandedParish === parish.id && (
+                      <div className="parish-details">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Event</th>
+                              <th>Position</th>
+                              <th>Points</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {parish.events.map((event, index) => (
+                              <tr key={index}>
+                                <td>{event.name}</td>
+                                <td>{event.position}</td>
+                                <td>{event.points}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

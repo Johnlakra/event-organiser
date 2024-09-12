@@ -22,20 +22,44 @@
 
 .mobile-section-header {
   display: none;
-  /* Hide by default */
 }
 
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
 .event-card {
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.event-card.live {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(248, 34, 73, 0.7), 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(248, 34, 73, 0), 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 34, 73, 0), 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .event-image {
@@ -45,24 +69,44 @@
 }
 
 .event-details {
-  padding: 15px;
+  padding: 20px;
+  position: relative;
 }
 
 .event-details h3 {
-  font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 5px;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #0e1b4d;
 }
 
 .next-event {
-  font-size: 14px;
+  font-size: 15px;
   color: #112363;
+  margin-bottom: 8px;
 }
 
 .venue {
-  font-size: 14px;
+  font-size: 15px;
   color: #f82249;
-  margin-top: 5px;
+  margin-top: 8px;
+  padding-right: 80px;
+}
+
+.live-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background-color: rgba(248, 34, 73, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(248, 34, 73, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -81,11 +125,14 @@
 
   .section-header {
     display: none;
-    /* Hide the original header on mobile */
   }
 
   .event-grid {
     grid-template-columns: 1fr;
-    /* Single column on mobile */
+  }
+
+  .event-card {
+    max-width: 400px;
+    margin: 0 auto;
   }
 }

@@ -4,16 +4,19 @@
   margin: 0 auto;
 }
 
-.deanery-item {
+.deanery-item,
+.parish-item {
   margin-bottom: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
 }
 
-.deanery-header {
+.deanery-header,
+.parish-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 15px;
   background-color: #f5f5f5;
@@ -24,12 +27,25 @@
   transition: background-color 0.3s ease;
 }
 
-.deanery-header:hover {
+.deanery-header:hover,
+.parish-header:hover {
   background-color: #e0e0e0;
 }
 
-.deanery-details {
+.parish-header {
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+}
+
+.deanery-details,
+.parish-details {
   padding: 15px;
+}
+
+.parish-item {
+  margin-bottom: 5px;
+  border: none;
+  border-radius: 0;
 }
 
 table {
@@ -50,7 +66,9 @@ th {
 }
 
 @media (max-width: 768px) {
-  .deanery-header {
+
+  .deanery-header,
+  .parish-header {
     font-size: 14px;
     padding: 10px;
   }

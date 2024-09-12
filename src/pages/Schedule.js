@@ -217,7 +217,7 @@ const Schedule = () => {
     };
 
     updateCurrentEvents();
-    const intervalId = setInterval(updateCurrentEvents, 600); // Update every minute
+    const intervalId = setInterval(updateCurrentEvents, 300000); // Update every minute
 
     return () => clearInterval(intervalId);
   }, []);
@@ -226,7 +226,7 @@ const Schedule = () => {
     <div className="schedule">
       <h1 className="schedule-title">BSMCSM 2024 Schedule</h1>
 
-     {/* { <div className="current-events-banner">
+      <div className="current-events-banner">
         {currentEvents.length > 0 ? (
           currentEvents.map((event, index) => (
             <div key={index} className="current-event">
@@ -236,9 +236,9 @@ const Schedule = () => {
             </div>
           ))
         ) : (
-          <p>on ongoing events</p>
+          <p> Ongoing events here</p>
         )}
-      </div>} */}
+      </div>
 
       <div className="tabs">
         {schedule.map((day, index) => (

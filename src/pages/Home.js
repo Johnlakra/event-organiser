@@ -10,11 +10,41 @@ const Home = () => {
     // Fetch live events data
     const fetchLiveEvents = async () => {
       const dummyEvents = [
-        { id: 1, venue: "Stage 1", currentEvent: "Group Song (Indian)", nextEvent: "Mono Act" },
-        { id: 2, venue: "Stage 2", currentEvent: "Essay Writing", nextEvent: "Extempore" },
-        { id: 3, venue: "Stage 3", currentEvent: "Fancy Dress", nextEvent: "Classical Solo Dance" },
-        { id: 4, venue: "Stage 4", currentEvent: "Water Color Painting", nextEvent: "Pencil Drawing" },
-        { id: 5, venue: "Main Ground", currentEvent: "100m Finals", nextEvent: "200m Heats" },
+        {
+          id: 1,
+          venue: "Stage 1",
+          currentEvent: "Group Song (Indian)",
+          nextEvent: "Mono Act",
+          onLive: true,
+        },
+        {
+          id: 2,
+          venue: "Stage 2",
+          currentEvent: "Essay Writing",
+          nextEvent: "Extempore",
+          onLive: false,
+        },
+        {
+          id: 3,
+          venue: "Stage 3",
+          currentEvent: "Fancy Dress",
+          nextEvent: "Classical Solo Dance",
+          onLive: true,
+        },
+        {
+          id: 4,
+          venue: "Stage 4",
+          currentEvent: "Water Color Painting",
+          nextEvent: "Pencil Drawing",
+          onLive: false,
+        },
+        {
+          id: 5,
+          venue: "Main Ground",
+          currentEvent: "100m Finals",
+          nextEvent: "200m Heats",
+          onLive: true,
+        },
       ];
       setLiveEvents(dummyEvents);
     };
