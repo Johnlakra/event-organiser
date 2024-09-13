@@ -51,13 +51,19 @@ const LeaderBoard = ({ data }) => {
               className="deanery-header"
               onClick={() => toggleDeanery(deanery.id)}
             >
-              <span>{`${deaneryIndex + 1}. ${deanery.name}`}</span>
-              <span>{deaneryTotalPoints} pts</span>
-              {expandedDeanery === deanery.id ? (
-                <ChevronUp size={20} />
-              ) : (
-                <ChevronDown size={20} />
-              )}
+                <div className="name-container">
+                  <span>{`${deaneryIndex + 1}. ${deanery.name}`}</span>
+                </div>
+                <div>
+                  <span>{deaneryTotalPoints} pts</span>
+                </div>
+                <div>
+                  {expandedDeanery === deanery.id ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </div>
             </button>
             {expandedDeanery === deanery.id && (
               <div className="deanery-details">
@@ -67,7 +73,7 @@ const LeaderBoard = ({ data }) => {
                       className="parish-header"
                       onClick={() => toggleParish(parish.id)}
                     >
-                      <span>{`${parishIndex + 1}. ${parish.name}`}</span>
+                      <div className='name-container'><span>{`${parishIndex + 1}. ${parish.name}`}</span></div>
                       <span>{parish.totalPoints} pts</span>
                       {expandedParish === parish.id ? (
                         <ChevronUp size={16} />
