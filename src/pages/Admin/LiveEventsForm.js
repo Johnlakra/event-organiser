@@ -1,95 +1,98 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
-import { addBatchStage } from "../../redux/liveonstage/liveonstageSlice";
+import { addBatchStage, getLiveOnStageItems } from "../../redux/liveonstage/liveonstageSlice";
 
 const LiveEventsForm = () => {
   const dispatch = useDispatch();
   const data = useSelector(dropdownState);
-  const [render, setRender] = useState({
-    stage: data.stage,
-  });
-  const [liveEvents, setLiveEvents] = useState();
+  const [liveEvents, setLiveEvents] = useState({});
+  const [loading, setLoading] = useState(true); // State to track loading
 
-  const handleInputChange = (venue, field, value) => {
-    setLiveEvents((prev) => ({
-      ...prev,
-      [venue.id]: { ...prev[venue.id], [field]: value },
-    }));
+  // Fetch live events data
+  const fetchLiveOnStage = useCallback(async () => {
+    try {
+      setLoading(true); // Start loader
+      const result = await dispatch(getLiveOnStageItems());
+      if (result?.error) {
+        // Handle error
+        console.error("Error fetching live events:", result.error);
+      } else {
+        const liveEventData = result?.payload?.reduce((acc, event) => {
+          acc[event.id] = event;
+          return acc;
+        }, {});
+        setLiveEvents(liveEventData || {});
+      }
+    } catch (error) {
+      console.error("Error fetching live events:", error);
+      // Handle error
+    } finally {
+      setLoading(false); // Stop loader
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchLiveOnStage();
+  }, [fetchLiveOnStage]);
+
+  // Handle input changes
+  const handleInputChange = (eventId, field, value) => {
+    setLiveEvents((prev) => {
+      // Debugging: Log previous state and new value
+      console.log("Updating state for eventId:", eventId, "field:", field, "value:", value);
+      return {
+        ...prev,
+        [eventId]: { ...prev[eventId], [field]: value },
+      };
+    });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // stage_id, current_event, next_event, live
-
     const payload = Object.values(liveEvents);
+    console.log("Submitting payload:", payload); // Debugging
     try {
-      // Loader here
       await dispatch(addBatchStage(payload));
     } catch (error) {
-      // Show Error
-    } finally {
-      // Loader off
+      console.error("Error submitting live events:", error);
+      // Handle error
     }
   };
 
-  // Optimize code here
-  const fetchDropdowns = useCallback(async () => {
-    const stage = data.stage;
-    setRender((prev) => ({
-      ...prev,
-      stage,
-    }));
-  }, [data.stage]);
-
-  useEffect(() => {
-    setLiveEvents(
-      data.stage?.reduce(
-        (acc, venue) => ({
-          ...acc,
-          [venue.id]: {
-            stage_id: venue.id,
-            current_event: "",
-            next_event: "",
-            live: false,
-          },
-        }),
-        {}
-      )
-    );
-  }, [data.stage]);
-
-  useEffect(() => {
-    fetchDropdowns();
-  }, [fetchDropdowns]);
+  // Conditionally render form only when loading is complete
+  if (loading) {
+    return <div>Loading...</div>; // Display loading message or spinner
+  }
 
   return (
     <form onSubmit={handleSubmit} className="live-events-form">
-      {render.stage?.map((venue) => (
-        <div key={venue.id} className="venue-form">
-          <h3>{venue.name}</h3>
+      {Object.values(liveEvents).map((event) => (
+        <div key={event.id} className="venue-form">
+          <h3>{event.stage_name}</h3>
           <input
             type="text"
             placeholder="Current Event"
-            value={liveEvents?.[venue.id]?.current_event}
+            value={event.current_event || ""}
             onChange={(e) =>
-              handleInputChange(venue, "current_event", e.target.value)
+              handleInputChange(event.id, "current_event", e.target.value)
             }
           />
           <input
             type="text"
             placeholder="Next Event"
-            value={liveEvents?.[venue.id]?.next_event}
+            value={event.next_event || ""}
             onChange={(e) =>
-              handleInputChange(venue, "next_event", e.target.value)
+              handleInputChange(event.id, "next_event", e.target.value)
             }
           />
           <label>
             <input
               type="checkbox"
-              checked={liveEvents?.[venue.id]?.live}
+              checked={event.live === 1}
               onChange={(e) =>
-                handleInputChange(venue, "live", e.target.checked)
+                handleInputChange(event.id, "live", e.target.checked ? 1 : 0)
               }
             />
             Live
