@@ -60,7 +60,7 @@ const LeaderboardForm = () => {
         const board_items = await dispatch(getLeaderBoardItems());
         if (board_items?.error) {
         } else {
-          await initialRender();
+          await initialRender(board_items?.payload);
           toast(result?.payload?.success);
         }
       }
@@ -119,9 +119,9 @@ const LeaderboardForm = () => {
     fetchDropdowns();
   }, [fetchDropdowns]);
 
-  const initialRender = useCallback(() => {
+  const initialRender = useCallback((data = []) => {
     setFormData(
-      render.leader_board?.reduce((acc, item) => {
+      data?.reduce((acc, item) => {
         const { event_id, position_id, denerary_id, parish_id } = item;
         const _ = {
           event: event_id,
@@ -145,11 +145,11 @@ const LeaderboardForm = () => {
         };
       }, {})
     );
-  }, [render.leader_board]);
+  }, []);
 
   useEffect(() => {
-    initialRender();
-  }, [initialRender]);
+    initialRender(render.leader_board);
+  }, [initialRender, render.leader_board]);
 
   return (
     <div className="leaderboard-form-container">
