@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, Check, Trash } from "lucide-react";
 import "./LeaderboardForm.css";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
 import {
   addBatchBoardItem,
+  deleteBoardItem,
   getLeaderBoardItems,
 } from "../../redux/leaderBoard/leaderBoardSlice";
 import { toast } from "sonner";
@@ -22,35 +23,57 @@ const LeaderboardForm = () => {
     leader_board: data.leader_board,
   });
 
-  const handlePositionChange = (event, position, field, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
+  const handlePositionChange = (event, position, index, field, value) => {
+    setFormData((prev) => ({
+      ...prev,
       [event]: {
-        ...prevData[event],
-        [position]: {
-          ...prevData[event]?.[position],
-          [field]: value,
-          event,
-          position,
-          entry: true,
-        },
+        ...prev[event],
+        [position]: prev[event]?.[position]?.map((item, idx) => {
+          if (index === idx) return { ...item, [field]: value, entry: true };
+          return item;
+        }) ?? [{ event, position, [field]: value, entry: true }],
       },
     }));
   };
 
+  const handleDelete = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+    if (!isConfirmed) return;
+    try {
+      setLoad((prev) => ({ ...prev, submit: true }));
+      const result = await dispatch(deleteBoardItem(id));
+      if (result?.error) {
+      } else {
+        const board_items = await dispatch(getLeaderBoardItems());
+        if (board_items?.error) {
+        } else {
+          await initialRender(board_items?.payload);
+          toast(result?.payload?.success);
+        }
+      }
+    } catch (error) {
+    } finally {
+      setLoad((prev) => ({ ...prev, submit: false }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = Object.entries(formData).flatMap(([key, value]) => {
-      return Object.entries(value)
-        .map(([key, value]) => ({
-          denerary_id: value.deanery,
-          parish_id: value.parish,
-          event_id: value.event,
-          position_id: value.position,
-          entry: value.entry,
-        }))
-        .filter((item) => item.entry);
-    });
+    const payload = Object.entries(formData).flatMap(([key, value]) =>
+      Object.entries(value).flatMap(([key, value]) =>
+        Object.entries(value)
+          .map(([key, value]) => ({
+            denerary_id: value.deanery,
+            parish_id: value.parish,
+            event_id: value.event,
+            position_id: value.position,
+            entry: value.entry,
+          }))
+          .filter((item) => item.entry)
+      )
+    );
     try {
       setLoad((prev) => ({ ...prev, submit: true }));
       const result = await dispatch(addBatchBoardItem(payload));
@@ -129,18 +152,21 @@ const LeaderboardForm = () => {
           denerary: denerary_id,
           parish: parish_id,
         };
+        const obj = {
+          id: item.id,
+          event: _.event,
+          position: _.position,
+          deanery: _.denerary,
+          parish: _.parish,
+          entry: false,
+        };
         return {
           ...acc,
           [_.event]: {
             ...acc[_.event],
-            [_.position]: {
-              ...acc[_.event]?.[_.position],
-              event: _.event,
-              position: _.position,
-              deanery: _.denerary,
-              parish: _.parish,
-              entry: false,
-            },
+            [_.position]: acc[_.event]?.[_.position]
+              ? [...acc[_.event]?.[_.position], obj]
+              : [obj],
           },
         };
       }, {})
@@ -183,56 +209,98 @@ const LeaderboardForm = () => {
                         <h4 className="position-title">
                           Position {position.name}
                         </h4>
-                        <select
-                          onChange={(e) =>
-                            handlePositionChange(
-                              event.id,
-                              position.id,
-                              "deanery",
-                              e.target.value
-                            )
-                          }
-                          value={
-                            formData[event.id]?.[position.id]?.deanery || ""
-                          }
-                          className="select-input"
-                        >
-                          <option value="">Select Deanery</option>
-                          {render.denerary?.map((deanery) => (
-                            <option key={deanery.id} value={deanery.id}>
-                              {deanery.name}
-                            </option>
-                          ))}
-                        </select>
-                        {formData[event.id]?.[position.id]?.deanery && (
-                          <select
-                            onChange={(e) =>
-                              handlePositionChange(
-                                event.id,
-                                position.id,
-                                "parish",
-                                e.target.value
-                              )
-                            }
-                            value={
-                              formData[event.id]?.[position.id]?.parish || ""
-                            }
-                            className="select-input"
-                          >
-                            <option value="">Select Parish</option>
-                            {render.parish
-                              ?.filter(
-                                (item) =>
-                                  item.denerary_id ==
-                                  formData[event.id]?.[position.id]?.deanery
-                              )
-                              ?.map((parish) => (
-                                <option key={parish.id} value={parish.id}>
-                                  {parish.name}
-                                </option>
-                              ))}
-                          </select>
-                        )}
+
+                        {(
+                          formData[event.id]?.[position.id] ?? [
+                            {
+                              event: event.id,
+                              position: position.id,
+                              deanery: "",
+                              parish: "",
+                            },
+                          ]
+                        ).map((item, index) => {
+                          return (
+                            <div
+                              key={`${item.id}_${item.id}_${index}`}
+                              style={{
+                                marginBottom: 10,
+                                display: "flex",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  width: 340,
+                                  marginRight: 10,
+                                }}
+                              >
+                                <select
+                                  onChange={(e) =>
+                                    handlePositionChange(
+                                      event.id,
+                                      position.id,
+                                      index,
+                                      "deanery",
+                                      e.target.value
+                                    )
+                                  }
+                                  value={item?.deanery ?? ""}
+                                  className="select-input"
+                                >
+                                  <option value="">Select Deanery</option>
+                                  {render.denerary?.map((deanery) => (
+                                    <option key={deanery.id} value={deanery.id}>
+                                      {deanery.name}
+                                    </option>
+                                  ))}
+                                </select>
+
+                                {item?.deanery && (
+                                  <select
+                                    onChange={(e) =>
+                                      handlePositionChange(
+                                        event.id,
+                                        position.id,
+                                        index,
+                                        "parish",
+                                        e.target.value
+                                      )
+                                    }
+                                    value={item.parish ?? ""}
+                                    className="select-input"
+                                  >
+                                    <option value="">Select Parish</option>
+                                    {render.parish
+                                      ?.filter(
+                                        (_) => _.denerary_id == item?.deanery
+                                      )
+                                      ?.map((parish) => (
+                                        <option
+                                          key={parish.id}
+                                          value={parish.id}
+                                        >
+                                          {parish.name}
+                                        </option>
+                                      ))}
+                                  </select>
+                                )}
+                              </div>
+                              {item?.id ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "end",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => handleDelete(item.id)}
+                                >
+                                  <Trash size={32} color="#f67373" />
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })}

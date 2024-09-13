@@ -17,6 +17,14 @@ export const addBatchBoardItem = createAsyncThunk(
   }
 );
 
+export const deleteBoardItem = createAsyncThunk(
+  "leaderBoard/getItems",
+  async (id) => {
+    const response = await api("DELETE", `leaderBoard/${id}`);
+    return response;
+  }
+);
+
 export const leaderBoardSlice = createSlice({
   name: "leaderBoard",
   initialState: {

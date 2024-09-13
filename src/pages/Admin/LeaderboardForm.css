@@ -1,127 +1,127 @@
 .leaderboard-form-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .leaderboard-form-title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .event-item {
-    margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    overflow: hidden;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 15px;
-    background-color: #f5f5f5;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .event-header:hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 .event-status {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .check-icon {
-    color: #4CAF50;
-    margin-right: 10px;
+  color: #4caf50;
+  margin-right: 10px;
 }
 
 .event-details {
-    padding: 15px;
+  padding: 15px;
 }
 
 .position-item {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .position-title {
-    font-weight: bold;
-    margin-bottom: 5px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .select-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
 }
 
 .submit-button {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #2196F3;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-    background-color: #1976D2;
+  background-color: #1976d2;
 }
 
 @media (min-width: 769px) {
-    .leaderboard-form-container {
-        max-width: 1200px;
-        /* Or any other maximum width you prefer */
-    }
+  .leaderboard-form-container {
+    max-width: 1200px;
+    /* Or any other maximum width you prefer */
+  }
 
-    .event-details {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
+  .event-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 
-    .position-item {
-        width: calc(33.333% - 10px);
-    }
+  .position-item {
+    width: calc(33.333% - 10px);
+  }
 }
 
 @media (max-width: 768px) {
-    .leaderboard-form-container {
-        padding: 10px;
-    }
+  .leaderboard-form-container {
+    padding: 10px;
+  }
 
-    .event-header {
-        font-size: 14px;
-        padding: 10px;
-    }
+  .event-header {
+    font-size: 14px;
+    padding: 10px;
+  }
 
-    .select-input {
-        font-size: 14px;
-    }
+  .select-input {
+    font-size: 14px;
+  }
 
-    .submit-button {
-        font-size: 14px;
-        padding: 12px;
-    }
+  .submit-button {
+    font-size: 14px;
+    padding: 12px;
+  }
 }

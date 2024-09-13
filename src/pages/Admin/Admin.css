@@ -1,12 +1,12 @@
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #f4f7f9;
   margin: 0;
   padding: 0;
 }
 
 .admin-login {
-  max-width: 400px;
+  width: 300px;
   margin: 100px auto;
   padding: 30px;
   background-color: white;
@@ -21,7 +21,6 @@ body {
 }
 
 .admin-login input {
-  width: 100%;
   padding: 12px;
   margin-bottom: 15px;
   border: 1px solid #ddd;

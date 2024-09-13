@@ -34,7 +34,13 @@ const Admin = () => {
     return (
       <div className="admin-login">
         <h2>Admin Login</h2>
-        <form onSubmit={handleLogin}>
+        <form
+          onSubmit={handleLogin}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <input
             type="password"
             value={password}
