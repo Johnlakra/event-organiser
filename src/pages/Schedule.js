@@ -226,7 +226,7 @@ const Schedule = () => {
     <div className="schedule">
       <h1 className="schedule-title">BSMCSM 2024 Schedule</h1>
 
-      <div className="current-events-banner">
+      {/* <div className="current-events-banner">
         {currentEvents.length > 0 ? (
           currentEvents.map((event, index) => (
             <div key={index} className="current-event">
@@ -238,7 +238,7 @@ const Schedule = () => {
         ) : (
           <p> Ongoing events here</p>
         )}
-      </div>
+      </div> */}
 
       <div className="tabs">
         {schedule.map((day, index) => (
