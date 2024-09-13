@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
 import { addBatchStage, getLiveOnStageItems } from "../../redux/liveonstage/liveonstageSlice";
+import { toast } from "sonner";
 
 const LiveEventsForm = () => {
   const dispatch = useDispatch();
@@ -39,8 +40,6 @@ const LiveEventsForm = () => {
   // Handle input changes
   const handleInputChange = (eventId, field, value) => {
     setLiveEvents((prev) => {
-      // Debugging: Log previous state and new value
-      console.log("Updating state for eventId:", eventId, "field:", field, "value:", value);
       return {
         ...prev,
         [eventId]: { ...prev[eventId], [field]: value },
@@ -52,9 +51,14 @@ const LiveEventsForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = Object.values(liveEvents);
-    console.log("Submitting payload:", payload); // Debugging
     try {
-      await dispatch(addBatchStage(payload));
+      const result = await dispatch(addBatchStage(payload));
+      if(result?.error){
+        toast(result?.error?.message);
+      }
+      else{
+        toast(result?.payload?.success);
+      }
     } catch (error) {
       console.error("Error submitting live events:", error);
       // Handle error

@@ -16,6 +16,7 @@ function App() {
     <Router>
       <div className="app">
         <Header />
+        <Toaster position="top-right"/>
         <main className="page-content">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -25,7 +26,6 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
-          <Toaster />
         </main>
         <Footer />
       </div>
