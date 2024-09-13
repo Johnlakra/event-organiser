@@ -9,6 +9,7 @@ import Schedule from "./pages/Schedule";
 import About from "./pages/About";
 import Admin from "./pages/Admin/Admin"; // Update this import
 import "./App.css";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
+          <Toaster />
         </main>
         <Footer />
       </div>

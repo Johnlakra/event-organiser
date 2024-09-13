@@ -3,17 +3,23 @@ import { ChevronDown, ChevronUp, Check } from "lucide-react";
 import "./LeaderboardForm.css";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
-import { addBatchBoardItem } from "../../redux/leaderBoard/leaderBoardSlice";
+import {
+  addBatchBoardItem,
+  getLeaderBoardItems,
+} from "../../redux/leaderBoard/leaderBoardSlice";
+import { toast } from "sonner";
 
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const data = useSelector(dropdownState);
+  const [load, setLoad] = useState({ submit: false });
   const [render, setRender] = useState({
     events: data.events,
     places: data.places,
     denerary: data.denerary,
     parish: data.parish,
+    leader_board: data.leader_board,
   });
 
   const handlePositionChange = (event, position, field, value) => {
@@ -26,6 +32,7 @@ const LeaderboardForm = () => {
           [field]: value,
           event,
           position,
+          entry: true,
         },
       },
     }));
@@ -34,21 +41,33 @@ const LeaderboardForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = Object.entries(formData).flatMap(([key, value]) => {
-      return Object.entries(value).map(([key, value]) => ({
-        denerary_id: value.deanery,
-        parish_id: value.parish,
-        event_id: value.event,
-        position_id: value.position,
-      }));
+      return Object.entries(value)
+        .map(([key, value]) => ({
+          denerary_id: value.deanery,
+          parish_id: value.parish,
+          event_id: value.event,
+          position_id: value.position,
+          entry: value.entry,
+        }))
+        .filter((item) => item.entry);
     });
-    // post api
     try {
-      // Loader here
-      await dispatch(addBatchBoardItem(payload));
+      setLoad((prev) => ({ ...prev, submit: true }));
+      const result = await dispatch(addBatchBoardItem(payload));
+      if (result?.error) {
+        toast(result?.error?.message);
+      } else {
+        const board_items = await dispatch(getLeaderBoardItems());
+        if (board_items?.error) {
+        } else {
+          await initialRender();
+          toast(result?.payload?.success);
+        }
+      }
     } catch (error) {
       // Show Error
     } finally {
-      // Loader off
+      setLoad((prev) => ({ ...prev, submit: false }));
     }
   };
 
@@ -81,6 +100,7 @@ const LeaderboardForm = () => {
     const places = data.places;
     const denerary = data.denerary;
     const parish = data.parish;
+    const leader_board = data.leader_board;
     const events = data.events.map((item) => ({
       ...item,
       expandEvent: false,
@@ -91,12 +111,45 @@ const LeaderboardForm = () => {
       places,
       denerary,
       parish,
+      leader_board,
     }));
-  }, [data.denerary, data.events, data.parish, data.places]);
+  }, [data.denerary, data.events, data.leader_board, data.parish, data.places]);
 
   useEffect(() => {
     fetchDropdowns();
   }, [fetchDropdowns]);
+
+  const initialRender = useCallback(() => {
+    setFormData(
+      render.leader_board?.reduce((acc, item) => {
+        const { event_id, position_id, denerary_id, parish_id } = item;
+        const _ = {
+          event: event_id,
+          position: position_id,
+          denerary: denerary_id,
+          parish: parish_id,
+        };
+        return {
+          ...acc,
+          [_.event]: {
+            ...acc[_.event],
+            [_.position]: {
+              ...acc[_.event]?.[_.position],
+              event: _.event,
+              position: _.position,
+              deanery: _.denerary,
+              parish: _.parish,
+              entry: false,
+            },
+          },
+        };
+      }, {})
+    );
+  }, [render.leader_board]);
+
+  useEffect(() => {
+    initialRender();
+  }, [initialRender]);
 
   return (
     <div className="leaderboard-form-container">
@@ -189,7 +242,7 @@ const LeaderboardForm = () => {
           );
         })}
         <button type="submit" className="submit-button">
-          Submit Leaderboard
+          {load.submit ? "Submitting..." : "Submit Leaderboard"}
         </button>
       </form>
     </div>

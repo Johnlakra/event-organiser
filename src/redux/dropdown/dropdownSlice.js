@@ -19,6 +19,8 @@ export const dropdownSlice = createSlice({
       state.denerary = action.payload.denerary;
       state.parish = action.payload.parish;
       state.stage = action.payload.stage;
+
+      state.leader_board = action.payload.leader_board;
     });
   },
 });
