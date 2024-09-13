@@ -2,10 +2,14 @@
   padding: 20px 0;
 }
 
-.container {
+.live-container {
   max-width: 1140px;
   margin: 0 auto;
   padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .section-header {
@@ -20,9 +24,9 @@
   color: #0e1b4d;
 }
 
-/* .mobile-section-header {
+.mobile-section-header {
   display: none;
-} */
+}
 
 .event-grid {
   display: grid;

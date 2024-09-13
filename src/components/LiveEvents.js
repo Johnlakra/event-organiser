@@ -5,7 +5,7 @@ import "./LiveEvents.css";
 const LiveEvents = ({ events }) => {
   return (
     <section className="live-events">
-      <div className="container">
+      <div className="live-container">
         <div className="event-grid">
           {events.map((event) => (
             <div

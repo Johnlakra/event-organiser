@@ -1,9 +1,9 @@
-.home {
-    composes: page-container from '../SharedPageStyles.css';
-}
-
 .welcome-title {
-    composes: page-title from '../SharedPageStyles.css';
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    color: #0e1b4d;
+    margin-bottom: 30px;
 }
 
 .home-content {
