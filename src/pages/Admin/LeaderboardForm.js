@@ -8,7 +8,7 @@ import {
   deleteBoardItem,
   getLeaderBoardItems,
 } from "../../redux/leaderBoard/leaderBoardSlice";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
@@ -50,7 +50,7 @@ const LeaderboardForm = () => {
         if (board_items?.error) {
         } else {
           await initialRender(board_items?.payload);
-          toast(result?.payload?.success);
+          toast.success(result?.payload?.success);
         }
       }
     } catch (error) {
@@ -78,13 +78,13 @@ const LeaderboardForm = () => {
       setLoad((prev) => ({ ...prev, submit: true }));
       const result = await dispatch(addBatchBoardItem(payload));
       if (result?.error) {
-        toast(result?.error?.message);
+        toast.error(result?.error?.message);
       } else {
         const board_items = await dispatch(getLeaderBoardItems());
         if (board_items?.error) {
         } else {
           await initialRender(board_items?.payload);
-          toast(result?.payload?.success);
+          toast.success(result?.payload?.success);
         }
       }
     } catch (error) {
@@ -112,11 +112,7 @@ const LeaderboardForm = () => {
     return render.places
       ?.filter((item) => item.type === type)
       ?.map((item) => item.id)
-      .every(
-        (position) =>
-          formData[event]?.[position]?.deanery &&
-          formData[event]?.[position]?.parish
-      );
+      .every((position) => formData[event]?.[position]?.[0]?.deanery);
   };
 
   const fetchDropdowns = useCallback(async () => {
@@ -230,7 +226,7 @@ const LeaderboardForm = () => {
                             >
                               <div
                                 style={{
-                                  width: 340,
+                                  width: "100%",
                                   marginRight: 10,
                                 }}
                               >
@@ -285,19 +281,26 @@ const LeaderboardForm = () => {
                                   </select>
                                 )}
                               </div>
-                              {item?.id ? (
-                                <div
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "end",
+                                  cursor: item?.id ? "pointer" : "",
+                                  width: 32,
+                                }}
+                                onClick={() =>
+                                  Boolean(item?.id) && handleDelete(item.id)
+                                }
+                              >
+                                <Trash
                                   style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "end",
-                                    cursor: "pointer",
+                                    display: item?.id ? "block" : "none",
                                   }}
-                                  onClick={() => handleDelete(item.id)}
-                                >
-                                  <Trash size={32} color="#f67373" />
-                                </div>
-                              ) : null}
+                                  size={32}
+                                  color="#f67373"
+                                />
+                              </div>
                             </div>
                           );
                         })}

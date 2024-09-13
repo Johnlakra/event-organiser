@@ -102,7 +102,7 @@
   }
 
   .position-item {
-    width: calc(33.333% - 10px);
+    width: calc(50% - 10px);
   }
 }
 
@@ -116,9 +116,9 @@
     padding: 10px;
   }
 
-  .select-input {
+  /* .select-input {
     font-size: 14px;
-  }
+  } */
 
   .submit-button {
     font-size: 14px;

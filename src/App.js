@@ -9,14 +9,14 @@ import Schedule from "./pages/Schedule";
 import About from "./pages/About";
 import Admin from "./pages/Admin/Admin"; // Update this import
 import "./App.css";
-import { Toaster } from "sonner";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <Router>
       <div className="app">
         <Header />
-        <Toaster position="top-right"/>
+        <Toaster position="top-right" />
         <main className="page-content">
           <Routes>
             <Route path="/" element={<Home />} />

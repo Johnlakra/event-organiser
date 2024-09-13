@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
-import { addBatchStage, getLiveOnStageItems } from "../../redux/liveonstage/liveonstageSlice";
-import { toast } from "sonner";
+import {
+  addBatchStage,
+  getLiveOnStageItems,
+} from "../../redux/liveonstage/liveonstageSlice";
+import toast from "react-hot-toast";
 
 const LiveEventsForm = () => {
   const dispatch = useDispatch();
@@ -53,11 +56,10 @@ const LiveEventsForm = () => {
     const payload = Object.values(liveEvents);
     try {
       const result = await dispatch(addBatchStage(payload));
-      if(result?.error){
-        toast(result?.error?.message);
-      }
-      else{
-        toast(result?.payload?.success);
+      if (result?.error) {
+        toast.error(result?.error?.message);
+      } else {
+        toast.success(result?.payload?.success);
       }
     } catch (error) {
       console.error("Error submitting live events:", error);
