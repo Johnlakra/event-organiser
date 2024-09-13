@@ -28,7 +28,7 @@
 }
 
 .name-container {
-  flex: 0 0 100px;
+  flex: 0 0 170px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
