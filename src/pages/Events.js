@@ -4,7 +4,7 @@ import "./Events.css";
 const Events = () => {
   return (
     <div className="events-container">
-      <h1 className="main-title">BSMCSM 2024 Events</h1>
+      <h1 className="main-title">BSMCSM 2025 Events</h1>
 
       <section className="sports-events">
         <h2>Sports Events</h2>
@@ -21,7 +21,6 @@ const Events = () => {
         <h3>Field Events</h3>
         <ul>
           <li>Long Jump (Boys & Girls)</li>
-          <li>High Jump (Boys & Girls)</li>
           <li>Shot Put (Boys & Girls)</li>
           <li>Discus Throw (Boys & Girls)</li>
           <li>Javelin Throw (Boys & Girls)</li>

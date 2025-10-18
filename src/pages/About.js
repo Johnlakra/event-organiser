@@ -4,13 +4,13 @@ import "./About.css";
 const About = () => {
   return (
     <div className="about-container">
-      <h1 className="main-title">About BSMCSM 2024</h1>
+      <h1 className="main-title">About BSMCSM 2025</h1>
 
       <section className="event-overview">
         <h2>Event Overview</h2>
         <p>
-          The BP. Symphorian Memorial Cultural & Sports Meet (BSMCSM-2024) is an
-          inter-deanery competition held from 12-14th September 2024 at Sacred
+          The BP. Symphorian Memorial Cultural & Sports Meet (BSMCSM-2025) is an
+          inter-deanery competition held from 20-22nd October 2025 at Sacred
           Heart Convent School, BRS Nagar, Ludhiana.
         </p>
       </section>
@@ -18,7 +18,7 @@ const About = () => {
       <section className="key-information">
         <h2>Key Information</h2>
         <ul>
-          <li>Date: 12-14th September 2024</li>
+          <li>Date: 20-22nd October 2025</li>
           <li>Venue: Sacred Heart Convent School, BRS Nagar, Ludhiana</li>
           <li>Participants: Unmarried Catholic youth aged 15-30</li>
           <li>Registration Fee: Rs. 150/- per person</li>

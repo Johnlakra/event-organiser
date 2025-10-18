@@ -19,7 +19,7 @@ const Footer = () => {
       <div style={containerStyle}>
         <div style={{ textAlign: 'center' }}>
           <p style={{ marginBottom: '10px' }}>
-            &copy; 2024 BSMCSM. All Rights Reserved
+            &copy; 2025 BSMCSM. All Rights Reserved
           </p>
           <p>
             Organized by the Youth Commission

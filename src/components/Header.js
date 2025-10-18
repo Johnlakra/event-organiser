@@ -20,7 +20,7 @@ const Header = () => {
       <div className="container">
         <h1 className="logo">
           <Link to="/">
-            BSMCSM<span>2024</span>
+            BSMCSM<span>2025</span>
           </Link>
         </h1>
         <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle menu">

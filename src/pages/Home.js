@@ -32,7 +32,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <h1 className="welcome-title">Welcome to BSMCSM 2024</h1>
+      <h1 className="welcome-title">Welcome to BSMCSM 2025</h1>
       <div className="mobile-section-header">
         <h2>Live Events</h2>
       </div>
