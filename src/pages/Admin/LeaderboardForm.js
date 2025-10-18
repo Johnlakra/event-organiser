@@ -18,7 +18,7 @@ const LeaderboardForm = () => {
   const [render, setRender] = useState({
     events: data.events,
     places: data.places,
-    denerary: data.denerary,
+    deanery: data.deanery,
     parish: data.parish,
     leader_board: data.leader_board,
   });
@@ -65,7 +65,7 @@ const LeaderboardForm = () => {
       Object.entries(value).flatMap(([key, value]) =>
         Object.entries(value)
           .map(([key, value]) => ({
-            denerary_id: value.deanery,
+            deanery_id: value.deanery,
             parish_id: value.parish,
             event_id: value.event,
             position_id: value.position,
@@ -117,7 +117,7 @@ const LeaderboardForm = () => {
 
   const fetchDropdowns = useCallback(async () => {
     const places = data.places;
-    const denerary = data.denerary;
+    const deanery = data.deanery;
     const parish = data.parish;
     const leader_board = data.leader_board;
     const events = data.events.map((item) => ({
@@ -128,11 +128,11 @@ const LeaderboardForm = () => {
       ...prev,
       events,
       places,
-      denerary,
+      deanery,
       parish,
       leader_board,
     }));
-  }, [data.denerary, data.events, data.leader_board, data.parish, data.places]);
+  }, [data.deanery, data.events, data.leader_board, data.parish, data.places]);
 
   useEffect(() => {
     fetchDropdowns();
@@ -141,18 +141,18 @@ const LeaderboardForm = () => {
   const initialRender = useCallback((data = []) => {
     setFormData(
       data?.reduce((acc, item) => {
-        const { event_id, position_id, denerary_id, parish_id } = item;
+        const { event_id, position_id, deanery_id, parish_id } = item;
         const _ = {
           event: event_id,
           position: position_id,
-          denerary: denerary_id,
+          deanery: deanery_id,
           parish: parish_id,
         };
         const obj = {
           id: item.id,
           event: _.event,
           position: _.position,
-          deanery: _.denerary,
+          deanery: _.deanery,
           parish: _.parish,
           entry: false,
         };
@@ -244,7 +244,7 @@ const LeaderboardForm = () => {
                                   className="select-input"
                                 >
                                   <option value="">Select Deanery</option>
-                                  {render.denerary?.map((deanery) => (
+                                  {render.deanery?.map((deanery) => (
                                     <option key={deanery.id} value={deanery.id}>
                                       {deanery.name}
                                     </option>
@@ -268,7 +268,7 @@ const LeaderboardForm = () => {
                                     <option value="">Select Parish</option>
                                     {render.parish
                                       ?.filter(
-                                        (_) => _.denerary_id == item?.deanery
+                                        (_) => _.deanery_id == item?.deanery
                                       )
                                       ?.map((parish) => (
                                         <option

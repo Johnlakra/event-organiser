@@ -16,7 +16,7 @@ export const dropdownSlice = createSlice({
     builder.addCase(getDropdown.fulfilled, (state, action) => {
       state.events = action.payload.events;
       state.places = action.payload.places;
-      state.denerary = action.payload.denerary;
+      state.deanery = action.payload.deanery;
       state.parish = action.payload.parish;
       state.stage = action.payload.stage;
 
