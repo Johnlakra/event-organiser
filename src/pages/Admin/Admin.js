@@ -18,8 +18,21 @@ const Admin = () => {
   // Check if already logged in on component mount
   useEffect(() => {
     const savedAuth = sessionStorage.getItem("isAdminAuthenticated");
-    if (savedAuth === "true") {
-      setIsAuthenticated(true);
+    const loginTime = sessionStorage.getItem("adminLoginTime");
+    
+    if (savedAuth === "true" && loginTime) {
+      const currentTime = new Date().getTime();
+      const timePassed = currentTime - parseInt(loginTime);
+      const sixHours = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+      
+      // Check if less than 6 hours have passed
+      if (timePassed < sixHours) {
+        setIsAuthenticated(true);
+      } else {
+        // Session expired, clear storage
+        sessionStorage.removeItem("isAdminAuthenticated");
+        sessionStorage.removeItem("adminLoginTime");
+      }
     }
   }, []);
 
@@ -27,7 +40,9 @@ const Admin = () => {
     e.preventDefault();
     if (password === correctPassword) {
       setIsAuthenticated(true);
+      const loginTime = new Date().getTime();
       sessionStorage.setItem("isAdminAuthenticated", "true");
+      sessionStorage.setItem("adminLoginTime", loginTime.toString());
     } else {
       alert("Incorrect password");
     }
@@ -36,6 +51,7 @@ const Admin = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem("isAdminAuthenticated");
+    sessionStorage.removeItem("adminLoginTime");
   };
 
   const fetchDropdowns = useCallback(async () => {
