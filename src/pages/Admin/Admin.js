@@ -4,10 +4,14 @@ import LeaderboardForm from "./LeaderboardForm";
 import "./Admin.css";
 import { useDispatch } from "react-redux";
 import { getDropdown } from "../../redux/dropdown/dropdownSlice";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+const SESSION_DURATION = 6 * 60 * 60 * 1000; // 6 hours
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("liveEvents");
   const dispatch = useDispatch();
 
@@ -15,23 +19,18 @@ const Admin = () => {
 
   const correctPassword = process.env.REACT_APP_ADMIN_PASSWORD;
 
-  // Check if already logged in on component mount
+  // Check authentication on mount
   useEffect(() => {
     const savedAuth = sessionStorage.getItem("isAdminAuthenticated");
     const loginTime = sessionStorage.getItem("adminLoginTime");
     
     if (savedAuth === "true" && loginTime) {
-      const currentTime = new Date().getTime();
-      const timePassed = currentTime - parseInt(loginTime);
-      const sixHours = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+      const timePassed = Date.now() - parseInt(loginTime);
       
-      // Check if less than 6 hours have passed
-      if (timePassed < sixHours) {
+      if (timePassed < SESSION_DURATION) {
         setIsAuthenticated(true);
       } else {
-        // Session expired, clear storage
-        sessionStorage.removeItem("isAdminAuthenticated");
-        sessionStorage.removeItem("adminLoginTime");
+        sessionStorage.clear();
       }
     }
   }, []);
@@ -40,9 +39,8 @@ const Admin = () => {
     e.preventDefault();
     if (password === correctPassword) {
       setIsAuthenticated(true);
-      const loginTime = new Date().getTime();
       sessionStorage.setItem("isAdminAuthenticated", "true");
-      sessionStorage.setItem("adminLoginTime", loginTime.toString());
+      sessionStorage.setItem("adminLoginTime", Date.now().toString());
     } else {
       alert("Incorrect password");
     }
@@ -50,8 +48,7 @@ const Admin = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem("isAdminAuthenticated");
-    sessionStorage.removeItem("adminLoginTime");
+    sessionStorage.clear();
   };
 
   const fetchDropdowns = useCallback(async () => {
@@ -66,20 +63,27 @@ const Admin = () => {
     return (
       <div className="admin-login">
         <h2>Admin Login</h2>
-        <form
-          onSubmit={handleLogin}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-          />
-          <button type="submit">Login</button>
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="password-input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className="password-input"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="toggle-password-btn"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
       </div>
     );
@@ -87,19 +91,9 @@ const Admin = () => {
 
   return (
     <div className="admin-panel">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+      <div className="admin-header">
         <h1>Admin Panel</h1>
-        <button 
-          onClick={handleLogout}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#f82249",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer"
-          }}
-        >
+        <button onClick={handleLogout} className="logout-btn">
           Logout
         </button>
       </div>
