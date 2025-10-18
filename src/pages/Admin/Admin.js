@@ -11,7 +11,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("liveEvents");
   const dispatch = useDispatch();
 
-  console.log("Password from env:", process.env.REACT_APP_ADMIN_PASSWORD);
+  // console.log("Password from env:", process.env.REACT_APP_ADMIN_PASSWORD);
 
   const correctPassword = process.env.REACT_APP_ADMIN_PASSWORD;
 
