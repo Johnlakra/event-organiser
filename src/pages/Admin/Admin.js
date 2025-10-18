@@ -11,15 +11,31 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("liveEvents");
   const dispatch = useDispatch();
 
-  const correctPassword = "your_secure_password"; // Replace with a secure password
+  console.log("Password from env:", process.env.REACT_APP_ADMIN_PASSWORD);
+
+  const correctPassword = process.env.REACT_APP_ADMIN_PASSWORD;
+
+  // Check if already logged in on component mount
+  useEffect(() => {
+    const savedAuth = sessionStorage.getItem("isAdminAuthenticated");
+    if (savedAuth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
     if (password === correctPassword) {
       setIsAuthenticated(true);
+      sessionStorage.setItem("isAdminAuthenticated", "true");
     } else {
       alert("Incorrect password");
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("isAdminAuthenticated");
   };
 
   const fetchDropdowns = useCallback(async () => {
@@ -55,7 +71,22 @@ const Admin = () => {
 
   return (
     <div className="admin-panel">
-      <h1>Admin Panel</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h1>Admin Panel</h1>
+        <button 
+          onClick={handleLogout}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#f82249",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          Logout
+        </button>
+      </div>
       <div className="tabs">
         <button
           className={activeTab === "liveEvents" ? "active" : ""}
