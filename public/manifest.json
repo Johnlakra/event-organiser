@@ -1,25 +1,113 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ICYM Jalandhar",
+  "name": "BSMCSM 2025 - ICYM Diocese of Jalandhar",
+  "description": "BP Symphorian Memorial Cultural & Sports Meet 2025 - Official website for inter-deanery Catholic youth competition organized by Indian Catholic Youth Movement, Diocese of Jalandhar",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
     },
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait-primary",
+  "theme_color": "#101522",
+  "background_color": "#ffffff",
+  "categories": [
+    "sports",
+    "events",
+    "education",
+    "social",
+    "lifestyle"
+  ],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "BSMCSM 2025 Home Screen"
+    },
+    {
+      "src": "screenshot2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Event Schedule and Registration"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "description": "View all sports and cultural events",
+      "url": "/events",
+      "icons": [
+        {
+          "src": "icon-events.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "short_name": "Schedule",
+      "description": "Check event schedule and timings",
+      "url": "/schedule",
+      "icons": [
+        {
+          "src": "icon-schedule.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Registration",
+      "short_name": "Register",
+      "description": "Register for BSMCSM 2025",
+      "url": "/register",
+      "icons": [
+        {
+          "src": "icon-register.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Leaderboard",
+      "short_name": "Results",
+      "description": "View competition results and leaderboard",
+      "url": "/leaderboard",
+      "icons": [
+        {
+          "src": "icon-leaderboard.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7"
 }
