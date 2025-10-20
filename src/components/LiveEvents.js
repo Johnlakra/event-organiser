@@ -1,5 +1,4 @@
 import React from "react";
-import { AlertCircle } from "lucide-react";
 import "./LiveEvents.css";
 
 const LiveEvents = ({ events }) => {

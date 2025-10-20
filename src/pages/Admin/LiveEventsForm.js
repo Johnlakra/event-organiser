@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { dropdownState } from "../../redux/dropdown/dropdownSlice";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   addBatchStage,
   getLiveOnStageItems,
@@ -9,7 +8,6 @@ import toast from "react-hot-toast";
 
 const LiveEventsForm = () => {
   const dispatch = useDispatch();
-  const data = useSelector(dropdownState);
   const [liveEvents, setLiveEvents] = useState({});
   const [loading, setLoading] = useState(true); // State to track loading
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Schedule.css";
 
 const Schedule = () => {
-  const [currentEvents, setCurrentEvents] = useState([]);
+  const [, setCurrentEvents] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
 
   const schedule = [
@@ -120,6 +120,7 @@ const Schedule = () => {
     const intervalId = setInterval(updateCurrentEvents, 60000);
 
     return () => clearInterval(intervalId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
