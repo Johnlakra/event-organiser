@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, Check, Trash } from "lucide-react";
+import { ChevronDown, ChevronUp, Check, Trash, Plus  } from "lucide-react";
 import "./LeaderboardForm.css";
 import { useDispatch, useSelector } from "react-redux";
 import { dropdownState } from "../../redux/dropdown/dropdownSlice";
@@ -22,6 +22,25 @@ const LeaderboardForm = () => {
     parish: data.parish,
     leader_board: data.leader_board,
   });
+
+  const handleAddEntry = (event, position) => {
+  setFormData((prev) => ({
+    ...prev,
+    [event]: {
+      ...prev[event],
+      [position]: [
+        ...(prev[event]?.[position] ?? []),
+        {
+          event,
+          position,
+          deanery: "",
+          parish: "",
+          entry: true,
+        },
+      ],
+    },
+  }));
+};
 
   const handlePositionChange = (event, position, index, field, value) => {
     setFormData((prev) => ({
@@ -202,9 +221,16 @@ const LeaderboardForm = () => {
                   {renderPositions(event.type).map((position) => {
                     return (
                       <div key={position.id} className="position-item">
-                        <h4 className="position-title">
-                          Position {position.name}
-                        </h4>
+                       <div className="position-header">
+                        <h4 className="position-title">Positions {position.name}</h4>
+                        <button
+                          type="button"
+                          className="add-entry-button"
+                          onClick={() => handleAddEntry(event.id, position.id)}
+                        >
+                          <Plus size={18} />
+                        </button>
+                      </div>
 
                         {(
                           formData[event.id]?.[position.id] ?? [
