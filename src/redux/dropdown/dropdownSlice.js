@@ -11,16 +11,20 @@ export const dropdownSlice = createSlice({
   initialState: {
     events: [],
     places: [],
+    deanery: [],
+    parish: [],
+    stage: [],
+    leader_board: [],
   },
   extraReducers: (builder) => {
     builder.addCase(getDropdown.fulfilled, (state, action) => {
-      state.events = action.payload.events;
-      state.places = action.payload.places;
-      state.denerary = action.payload.denerary;
-      state.parish = action.payload.parish;
-      state.stage = action.payload.stage;
-
-      state.leader_board = action.payload.leader_board;
+      const payload = action.payload ?? {};
+      state.events = payload.events ?? [];
+      state.places = payload.places ?? [];
+      state.deanery = payload.deanery ?? [];
+      state.parish = payload.parish ?? [];
+      state.stage = payload.stage ?? [];
+      state.leader_board = payload.leader_board ?? [];
     });
   },
 });

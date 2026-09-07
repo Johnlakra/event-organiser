@@ -16,7 +16,7 @@ const Home = () => {
       if (result?.error) {
         // Show Error
       } else {
-        setLiveEvents(result?.payload);
+        setLiveEvents(result?.payload ?? []);
       }
     } catch (error) {
       // Show Error

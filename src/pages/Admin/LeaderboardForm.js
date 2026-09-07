@@ -23,15 +23,42 @@ const LeaderboardForm = () => {
     leader_board: data.leader_board,
   });
 
+  const handleAddEntry = (event, position) => {
+  setFormData((prev) => ({
+    ...prev,
+    [event]: {
+      ...prev[event],
+      [position]: [
+        ...(prev[event]?.[position] ?? []),
+        {
+          event,
+          position,
+          deanery: "",
+          parish: "",
+          entry: true,
+        },
+      ],
+    },
+  }));
+};
+
+  // <select> values are always strings, while ids coming from the API are
+  // numbers. Normalise here so id comparisons (e.g. the parish filter) work.
+  const toId = (value) => (value === "" || value == null ? "" : Number(value));
+
   const handlePositionChange = (event, position, index, field, value) => {
+    const id = toId(value);
     setFormData((prev) => ({
       ...prev,
       [event]: {
         ...prev[event],
         [position]: prev[event]?.[position]?.map((item, idx) => {
-          if (index === idx) return { ...item, [field]: value, entry: true };
-          return item;
-        }) ?? [{ event, position, [field]: value, entry: true }],
+          if (index !== idx) return item;
+          // Changing the deanery invalidates the parish selected under it.
+          if (field === "deanery")
+            return { ...item, deanery: id, parish: "", entry: true };
+          return { ...item, [field]: id, entry: true };
+        }) ?? [{ event, position, [field]: id, entry: true }],
       },
     }));
   };
@@ -64,16 +91,20 @@ const LeaderboardForm = () => {
     const payload = Object.entries(formData).flatMap(([key, value]) =>
       Object.entries(value).flatMap(([key, value]) =>
         Object.entries(value)
-          .map(([key, value]) => ({
-            denerary_id: value.deanery,
-            parish_id: value.parish,
-            event_id: value.event,
-            position_id: value.position,
+          .map(([, value]) => ({
+            deanery_id: Number(value.deanery),
+            parish_id: Number(value.parish) || 0,
+            event_id: Number(value.event),
+            position_id: Number(value.position),
             entry: value.entry,
           }))
-          .filter((item) => item.entry)
+          .filter((item) => item.entry && Boolean(item.deanery_id))
       )
     );
+    if (payload.length === 0) {
+      toast.error("Select a deanery before submitting");
+      return;
+    }
     try {
       setLoad((prev) => ({ ...prev, submit: true }));
       const result = await dispatch(addBatchBoardItem(payload));
@@ -268,7 +299,9 @@ const LeaderboardForm = () => {
                                     <option value="">Select Parish</option>
                                     {render.parish
                                       ?.filter(
-                                        (_) => _.denerary_id == item?.deanery
+                                        (_) =>
+                                          Number(_.deanery_id) ===
+                                          Number(item?.deanery)
                                       )
                                       ?.map((parish) => (
                                         <option

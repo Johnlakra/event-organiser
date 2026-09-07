@@ -10,7 +10,7 @@ export const getLeaderBoardItems = createAsyncThunk(
 );
 
 export const addBatchBoardItem = createAsyncThunk(
-  "leaderBoard/getItems",
+  "leaderBoard/addBatch",
   async (payload) => {
     const response = await api("POST", "leaderBoard/batch", payload);
     return response;
@@ -18,7 +18,7 @@ export const addBatchBoardItem = createAsyncThunk(
 );
 
 export const deleteBoardItem = createAsyncThunk(
-  "leaderBoard/getItems",
+  "leaderBoard/deleteItem",
   async (id) => {
     const response = await api("DELETE", `leaderBoard/${id}`);
     return response;

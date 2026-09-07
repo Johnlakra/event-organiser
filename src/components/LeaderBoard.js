@@ -17,7 +17,7 @@ const LeaderBoard = ({ data }) => {
   };
 
   const calculateTotalPoints = (events) => {
-    return events.reduce((total, event) => total + event.points, 0);
+    return events.reduce((total, event) => total + (event.points ?? 0), 0);
   };
 
   const sortedData = [...data].sort(
@@ -33,7 +33,7 @@ const LeaderBoard = ({ data }) => {
             acc[event.parish] = { events: [], totalPoints: 0 };
           }
           acc[event.parish].events.push(event);
-          acc[event.parish].totalPoints += event.points;
+          acc[event.parish].totalPoints += event.points ?? 0;
           return acc;
         }, {});
 

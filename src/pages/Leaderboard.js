@@ -17,9 +17,9 @@ const Leaderboard = () => {
       if (result?.error) {
         // Show Error
       } else {
-        const grouped = result?.payload?.reduce((acc, item) => {
-          if (!acc[item.denerary]) acc[item.denerary] = [];
-          acc[item.denerary].push(item);
+        const grouped = (result?.payload ?? []).reduce((acc, item) => {
+          if (!acc[item.deanery]) acc[item.deanery] = [];
+          acc[item.deanery].push(item);
           return acc;
         }, {});
         const data = Object.entries(grouped).map(([key, value], index) => {
