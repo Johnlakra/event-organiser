@@ -1,78 +1,102 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, Check, Trash, Plus  } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronDown, ChevronUp, Check, Trash, Plus } from "lucide-react";
 import "./LeaderboardForm.css";
 import { useDispatch, useSelector } from "react-redux";
-import { dropdownState } from "../../redux/dropdown/dropdownSlice";
+import { dropdownState, getDropdown } from "../../redux/dropdown/dropdownSlice";
 import {
   addBatchBoardItem,
   deleteBoardItem,
-  getLeaderBoardItems,
 } from "../../redux/leaderBoard/leaderBoardSlice";
 import toast from "react-hot-toast";
+import { sortYearsDesc } from "../../utils/years";
+
+const CURRENT_YEAR_STATUS = 1;
+
+const pickDefaultYear = (years = []) =>
+  years.find((year) => Number(year.status) === CURRENT_YEAR_STATUS) ??
+  years[0] ??
+  null;
+
+/** Select elements hand back strings; every id compared downstream is a number. */
+const toId = (value) => (value === "" || value === null ? "" : Number(value));
 
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
+  const [selectedYearId, setSelectedYearId] = useState(null);
   const dispatch = useDispatch();
   const data = useSelector(dropdownState);
   const [load, setLoad] = useState({ submit: false });
   const [render, setRender] = useState({
-    events: data.events,
-    places: data.places,
-    deanery: data.deanery,
-    parish: data.parish,
-    leader_board: data.leader_board,
+    events: data.events ?? [],
+    places: data.places ?? [],
+    deanery: data.deanery ?? [],
+    parish: data.parish ?? [],
+    leader_board: data.leader_board ?? [],
+    year: data.year ?? [],
   });
 
+  const selectedYear = useMemo(
+    () =>
+      (render.year ?? []).find(
+        (year) => String(year.id) === String(selectedYearId)
+      ) ?? null,
+    [render.year, selectedYearId]
+  );
+
   const handleAddEntry = (event, position) => {
-  setFormData((prev) => ({
-    ...prev,
-    [event]: {
-      ...prev[event],
-      [position]: [
-        ...(prev[event]?.[position] ?? []),
-        {
-          event,
-          position,
-          deanery: "",
-          parish: "",
-          entry: true,
-        },
-      ],
-    },
-  }));
-};
+    setFormData((prev) => ({
+      ...prev,
+      [event]: {
+        ...prev[event],
+        [position]: [
+          ...(prev[event]?.[position] ?? []),
+          { event, position, deanery: "", parish: "", entry: true },
+        ],
+      },
+    }));
+  };
 
   const handlePositionChange = (event, position, index, field, value) => {
+    const parsed = toId(value);
+
     setFormData((prev) => ({
       ...prev,
       [event]: {
         ...prev[event],
         [position]: prev[event]?.[position]?.map((item, idx) => {
-          if (index === idx) return { ...item, [field]: value, entry: true };
-          return item;
-        }) ?? [{ event, position, [field]: value, entry: true }],
+          if (idx !== index) return item;
+          // Switching deanery invalidates any parish already picked under it.
+          const cleared = field === "deanery" ? { parish: "" } : {};
+          return { ...item, ...cleared, [field]: parsed, entry: true };
+        }) ?? [{ event, position, [field]: parsed, entry: true }],
       },
     }));
   };
+
+  const refreshDropdowns = useCallback(async () => {
+    const result = await dispatch(getDropdown());
+    if (result?.error) {
+      toast.error(result.error.message ?? "Could not refresh the leaderboard");
+    }
+  }, [dispatch]);
 
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this item?"
     );
     if (!isConfirmed) return;
+
     try {
       setLoad((prev) => ({ ...prev, submit: true }));
       const result = await dispatch(deleteBoardItem(id));
       if (result?.error) {
-      } else {
-        const board_items = await dispatch(getLeaderBoardItems());
-        if (board_items?.error) {
-        } else {
-          await initialRender(board_items?.payload);
-          toast.success(result?.payload?.success);
-        }
+        toast.error(result.error.message ?? "Failed to delete the entry");
+        return;
       }
+      await refreshDropdowns();
+      toast.success(result?.payload?.success ?? "Entry deleted");
     } catch (error) {
+      toast.error(error.message ?? "Failed to delete the entry");
     } finally {
       setLoad((prev) => ({ ...prev, submit: false }));
     }
@@ -80,266 +104,295 @@ const LeaderboardForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = Object.entries(formData).flatMap(([, value]) =>
-      Object.entries(value).flatMap(([, value]) =>
-        Object.entries(value)
-          .map(([, value]) => ({
-            deanery_id: value.deanery,
-            parish_id: value.parish,
-            event_id: value.event,
-            position_id: value.position,
-            entry: value.entry,
+
+    if (!selectedYearId) {
+      toast.error("Select a year before submitting");
+      return;
+    }
+
+    const payload = Object.values(formData).flatMap((positions) =>
+      Object.values(positions).flatMap((entries) =>
+        entries
+          .filter((entry) => entry.entry && entry.deanery)
+          .map((entry) => ({
+            deanery_id: entry.deanery,
+            parish_id: entry.parish,
+            event_id: entry.event,
+            position_id: entry.position,
+            year_id: selectedYearId,
           }))
-          .filter((item) => item.entry)
       )
     );
+
+    if (payload.length === 0) {
+      toast.error("Nothing new to submit");
+      return;
+    }
+
     try {
       setLoad((prev) => ({ ...prev, submit: true }));
       const result = await dispatch(addBatchBoardItem(payload));
       if (result?.error) {
-        toast.error(result?.error?.message);
-      } else {
-        const board_items = await dispatch(getLeaderBoardItems());
-        if (board_items?.error) {
-        } else {
-          await initialRender(board_items?.payload);
-          toast.success(result?.payload?.success);
-        }
+        toast.error(result.error.message ?? "Failed to save the leaderboard");
+        return;
       }
+      await refreshDropdowns();
+      toast.success(
+        result?.payload?.success ?? `Saved for ${selectedYear?.name ?? "the year"}`
+      );
     } catch (error) {
-      // Show Error
+      toast.error(error.message ?? "Failed to save the leaderboard");
     } finally {
       setLoad((prev) => ({ ...prev, submit: false }));
     }
   };
 
-  const renderPositions = (type) => {
-    return render.places.filter((item) => item.type === type);
-  };
+  const renderPositions = (type) =>
+    (render.places ?? []).filter((item) => item.type === type);
 
   const toggleEvent = (event) =>
-    setRender((prev) => {
-      const events = prev.events.map((item) => {
-        if (item.id === event.id)
-          return { ...item, expandEvent: !item.expandEvent };
-        return { ...item, expandEvent: false };
-      });
-      return { ...prev, events };
-    });
-
-  const isEventComplete = (type, event) => {
-    return render.places
-      ?.filter((item) => item.type === type)
-      ?.map((item) => item.id)
-      .every((position) => formData[event]?.[position]?.[0]?.deanery);
-  };
-
-  const fetchDropdowns = useCallback(async () => {
-    const places = data.places;
-    const deanery = data.deanery;
-    const parish = data.parish;
-    const leader_board = data.leader_board;
-    const events = data.events.map((item) => ({
-      ...item,
-      expandEvent: false,
-    }));
     setRender((prev) => ({
       ...prev,
-      events,
-      places,
-      deanery,
-      parish,
-      leader_board,
+      events: prev.events.map((item) =>
+        item.id === event.id
+          ? { ...item, expandEvent: !item.expandEvent }
+          : { ...item, expandEvent: false }
+      ),
     }));
-  }, [data.deanery, data.events, data.leader_board, data.parish, data.places]);
+
+  const isEventComplete = (type, event) =>
+    renderPositions(type)
+      .map((item) => item.id)
+      .every((position) => formData[event]?.[position]?.[0]?.deanery);
+
+  const fetchDropdowns = useCallback(() => {
+    setRender((prev) => ({
+      ...prev,
+      events: (data.events ?? []).map((item) => ({
+        ...item,
+        expandEvent: false,
+      })),
+      places: data.places ?? [],
+      deanery: data.deanery ?? [],
+      parish: data.parish ?? [],
+      leader_board: data.leader_board ?? [],
+      year: sortYearsDesc(data.year ?? []),
+    }));
+  }, [
+    data.deanery,
+    data.events,
+    data.leader_board,
+    data.parish,
+    data.places,
+    data.year,
+  ]);
 
   useEffect(() => {
     fetchDropdowns();
   }, [fetchDropdowns]);
 
-  const initialRender = useCallback((data = []) => {
+  useEffect(() => {
+    if (selectedYearId !== null) return;
+    const fallback = pickDefaultYear(render.year);
+    if (fallback) setSelectedYearId(fallback.id);
+  }, [render.year, selectedYearId]);
+
+  const initialRender = useCallback((rows = []) => {
     setFormData(
-      data?.reduce((acc, item) => {
+      rows.reduce((acc, item) => {
         const { event_id, position_id, deanery_id, parish_id } = item;
-        const _ = {
+        const entry = {
+          id: item.id,
           event: event_id,
           position: position_id,
           deanery: deanery_id,
           parish: parish_id,
-        };
-        const obj = {
-          id: item.id,
-          event: _.event,
-          position: _.position,
-          deanery: _.deanery,
-          parish: _.parish,
           entry: false,
         };
         return {
           ...acc,
-          [_.event]: {
-            ...acc[_.event],
-            [_.position]: acc[_.event]?.[_.position]
-              ? [...acc[_.event]?.[_.position], obj]
-              : [obj],
+          [event_id]: {
+            ...acc[event_id],
+            [position_id]: [...(acc[event_id]?.[position_id] ?? []), entry],
           },
         };
       }, {})
     );
   }, []);
 
+  // Only the selected edition is prefilled, so 2025 results stay untouched
+  // while 2026 is being entered.
   useEffect(() => {
-    initialRender(render.leader_board);
-  }, [initialRender, render.leader_board]);
+    if (!selectedYearId) return;
+    const rowsForYear = (render.leader_board ?? []).filter(
+      (row) => String(row.year_id) === String(selectedYearId)
+    );
+    initialRender(rowsForYear);
+  }, [initialRender, render.leader_board, selectedYearId]);
 
   return (
     <div className="leaderboard-form-container">
       <h1 className="leaderboard-form-title">Leaderboard Entry Form</h1>
+
+      <div className="year-picker">
+        <label htmlFor="leaderboard-year">Year</label>
+        <select
+          id="leaderboard-year"
+          className="select-input"
+          value={selectedYearId ?? ""}
+          onChange={(e) => setSelectedYearId(toId(e.target.value))}
+        >
+          <option value="">Select Year</option>
+          {(render.year ?? []).map((year) => (
+            <option key={year.id} value={year.id}>
+              {year.name}
+              {Number(year.status) === CURRENT_YEAR_STATUS ? " (current)" : ""}
+            </option>
+          ))}
+        </select>
+        {selectedYear && (
+          <p className="year-picker-hint">
+            Entries below belong to <strong>{selectedYear.name}</strong>. Other
+            years are left untouched.
+          </p>
+        )}
+      </div>
+
       <form onSubmit={handleSubmit}>
-        {render.events.map((event, eventIndex) => {
-          return (
-            <div key={event.id} className="event-item">
-              <button
-                type="button"
-                className="event-header"
-                onClick={() => toggleEvent(event)}
-              >
-                <span>{`${eventIndex + 1}. ${event.name}`}</span>
-                <div className="event-status">
-                  {isEventComplete(event.type, event.id) && (
-                    <Check size={20} className="check-icon" />
-                  )}
-                  {event.expandEvent ? (
-                    <ChevronUp size={20} />
-                  ) : (
-                    <ChevronDown size={20} />
-                  )}
-                </div>
-              </button>
-              {event.expandEvent && (
-                <div className="event-details">
-                  {renderPositions(event.type).map((position) => {
-                    return (
-                      <div key={position.id} className="position-item">
-                       <div className="position-header">
-                        <h4 className="position-title">Positions {position.name}</h4>
-                        <button
-                          type="button"
-                          className="add-entry-button"
-                          onClick={() => handleAddEntry(event.id, position.id)}
-                        >
-                          <Plus size={18} />
-                        </button>
-                      </div>
+        {render.events.map((event, eventIndex) => (
+          <div key={event.id} className="event-item">
+            <button
+              type="button"
+              className="event-header"
+              onClick={() => toggleEvent(event)}
+            >
+              <span>{`${eventIndex + 1}. ${event.name}`}</span>
+              <div className="event-status">
+                {isEventComplete(event.type, event.id) && (
+                  <Check size={20} className="check-icon" />
+                )}
+                {event.expandEvent ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </div>
+            </button>
 
-                        {(
-                          formData[event.id]?.[position.id] ?? [
-                            {
-                              event: event.id,
-                              position: position.id,
-                              deanery: "",
-                              parish: "",
-                            },
-                          ]
-                        ).map((item, index) => {
-                          return (
-                            <div
-                              key={`${item.id}_${item.id}_${index}`}
-                              style={{
-                                marginBottom: 10,
-                                display: "flex",
-                              }}
+            {event.expandEvent && (
+              <div className="event-details">
+                {renderPositions(event.type).map((position) => (
+                  <div key={position.id} className="position-item">
+                    <div className="position-header">
+                      <h4 className="position-title">
+                        Positions {position.name}
+                      </h4>
+                      <button
+                        type="button"
+                        className="add-entry-button"
+                        onClick={() => handleAddEntry(event.id, position.id)}
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </div>
+
+                    {(
+                      formData[event.id]?.[position.id] ?? [
+                        {
+                          event: event.id,
+                          position: position.id,
+                          deanery: "",
+                          parish: "",
+                        },
+                      ]
+                    ).map((item, index) => (
+                      <div
+                        key={`${event.id}_${position.id}_${item.id ?? index}`}
+                        style={{ marginBottom: 10, display: "flex" }}
+                      >
+                        <div style={{ width: "100%", marginRight: 10 }}>
+                          <select
+                            onChange={(e) =>
+                              handlePositionChange(
+                                event.id,
+                                position.id,
+                                index,
+                                "deanery",
+                                e.target.value
+                              )
+                            }
+                            value={item?.deanery ?? ""}
+                            className="select-input"
+                          >
+                            <option value="">Select Deanery</option>
+                            {render.deanery?.map((deanery) => (
+                              <option key={deanery.id} value={deanery.id}>
+                                {deanery.name}
+                              </option>
+                            ))}
+                          </select>
+
+                          {Boolean(item?.deanery) && (
+                            <select
+                              onChange={(e) =>
+                                handlePositionChange(
+                                  event.id,
+                                  position.id,
+                                  index,
+                                  "parish",
+                                  e.target.value
+                                )
+                              }
+                              value={item.parish ?? ""}
+                              className="select-input"
                             >
-                              <div
-                                style={{
-                                  width: "100%",
-                                  marginRight: 10,
-                                }}
-                              >
-                                <select
-                                  onChange={(e) =>
-                                    handlePositionChange(
-                                      event.id,
-                                      position.id,
-                                      index,
-                                      "deanery",
-                                      e.target.value
-                                    )
-                                  }
-                                  value={item?.deanery ?? ""}
-                                  className="select-input"
-                                >
-                                  <option value="">Select Deanery</option>
-                                  {render.deanery?.map((deanery) => (
-                                    <option key={deanery.id} value={deanery.id}>
-                                      {deanery.name}
-                                    </option>
-                                  ))}
-                                </select>
+                              <option value="">Select Parish</option>
+                              {render.parish
+                                ?.filter(
+                                  (parish) =>
+                                    Number(parish.deanery_id) ===
+                                    Number(item.deanery)
+                                )
+                                ?.map((parish) => (
+                                  <option key={parish.id} value={parish.id}>
+                                    {parish.name}
+                                  </option>
+                                ))}
+                            </select>
+                          )}
+                        </div>
 
-                                {item?.deanery && (
-                                  <select
-                                    onChange={(e) =>
-                                      handlePositionChange(
-                                        event.id,
-                                        position.id,
-                                        index,
-                                        "parish",
-                                        e.target.value
-                                      )
-                                    }
-                                    value={item.parish ?? ""}
-                                    className="select-input"
-                                  >
-                                    <option value="">Select Parish</option>
-                                    {render.parish
-                                      ?.filter(
-                                        (_) => _.deanery_id === item?.deanery
-                                      )
-                                      ?.map((parish) => (
-                                        <option
-                                          key={parish.id}
-                                          value={parish.id}
-                                        >
-                                          {parish.name}
-                                        </option>
-                                      ))}
-                                  </select>
-                                )}
-                              </div>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "end",
-                                  cursor: item?.id ? "pointer" : "",
-                                  width: 32,
-                                }}
-                                onClick={() =>
-                                  Boolean(item?.id) && handleDelete(item.id)
-                                }
-                              >
-                                <Trash
-                                  style={{
-                                    display: item?.id ? "block" : "none",
-                                  }}
-                                  size={32}
-                                  color="#f67373"
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "end",
+                            cursor: item?.id ? "pointer" : "",
+                            width: 32,
+                          }}
+                          onClick={() =>
+                            Boolean(item?.id) && handleDelete(item.id)
+                          }
+                        >
+                          <Trash
+                            style={{ display: item?.id ? "block" : "none" }}
+                            size={32}
+                            color="#f67373"
+                          />
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
-        <button type="submit" className="submit-button">
-          {load.submit ? "Submitting..." : "Submit Leaderboard"}
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+
+        <button type="submit" className="submit-button" disabled={load.submit}>
+          {load.submit
+            ? "Submitting..."
+            : `Submit Leaderboard${selectedYear ? ` (${selectedYear.name})` : ""}`}
         </button>
       </form>
     </div>
@@ -347,235 +400,3 @@ const LeaderboardForm = () => {
 };
 
 export default LeaderboardForm;
-
-// const deaneries = {
-//   Ajnala: [
-//     "Ajnala ",
-//     "Chamiyari",
-//     "Chogawan",
-//     "Chuchakwal",
-//     "Karyal",
-//     "Othian",
-//     "Punga",
-//     "Ramdas",
-//   ],
-//   Amritsar: [
-//     "Amritsar Cantt.",
-//     "Bharariwal",
-//     "Gumtala",
-//     "Khasa",
-//     "Lahorigate",
-//     "Majitha Road",
-//     "Nai Abadi",
-//     "Rajasansi",
-//   ],
-//   Dhariwal: [
-//     "Batala",
-//     "Dhariwal",
-//     "Dialgarh",
-//     "Kalanaur",
-//     "Mastkot",
-//     "Naushera Majja Singh",
-//     "Qadian",
-//   ],
-//   "Fatehgarh Churian": [
-//     "Fatehgarh Churian",
-//     "Dera Baba Nanak",
-//     "Dharamkot Randhawa",
-//     "Ghanie Ke Banger",
-//     "Kotli",
-//     "Machi Nangal",
-//     "Majitha",
-//     "Pakharpura",
-//   ],
-//   Ferozpur: [
-//     "Faridkot",
-//     "Ferozepur Badhni Mahafariste Wala",
-//     "Ferozpur Canal Colony",
-//     "Ferozpur Cantt",
-//     "Ferozpur City",
-//     "Gulami Wala",
-//     "Guru Har Sahai",
-//     "Lohgarh-Sur Singh Wala (Station)",
-//     "Mamdot",
-//     "Mudki (Station)",
-//     "Sadiq",
-//     "Talwandi Bhai",
-//     "Tehna, Faridkot",
-//   ],
-//   Gurdaspur: [
-//     "Balun (Station)",
-//     "Dalhousie",
-//     "Dina Nagar",
-//     "Dorangala",
-//     "Gurdaspur",
-//     "Jandwal, Pathankot",
-//     "Kahnuwan",
-//     "Narot Jaimal Singh (Station)",
-//     "Pathankot City",
-//     "Puranashalla",
-//     "Sidhwan Jamita, Joura Chitra",
-//     "Sujanpur, Pathankot",
-//   ],
-//   Hoshiarpur: [
-//     "Kakkon",
-//     "Baijnath",
-//     "Balachaur",
-//     "Bassi Bahian",
-//     "Bhunga",
-//     "Gaggal",
-//     "Garshankar",
-//     "Jindwari",
-//     "Mehtiana, Khanaura",
-//     "Nandachaur",
-//     "Nangal",
-//     "Palampur",
-//     "Una",
-//     "Yol Camp",
-//   ],
-//   "Jalandhar Cantt.": [
-//     "Apra",
-//     "Banga (Station)",
-//     "Behram (Station)",
-//     "Dhina-Chittewani",
-//     "Jalandhar Cantt",
-//     "Jandiala Manjki",
-//     "Nawanshahar",
-//     "Phagwara",
-//     "Phulriwal",
-//     "Rawalpindi",
-//     "Sansarpur",
-//   ],
-//   "Jalandhar City": [
-//     "Adampur",
-//     "Bootan",
-//     "Chogitty",
-//     "Gakhalan",
-//     "Jalandhar City",
-//     "Lambapind",
-//     "Maqsudan",
-//   ],
-//   Kapurthala: [
-//     "Hussainpur- Lodhi Bhulana",
-//     "Kapurthala",
-//     "Kishangarh",
-//     "Kartarpur",
-//     "Mehatpur",
-//     "Nakodar",
-//     "Shahkot",
-//     "Sultanpur Lodhi",
-//   ],
-//   Ludhiana: [
-//     "BRS Nagar",
-//     "Jagraon",
-//     "Jalandhar Bypass, Ludhiana",
-//     "Kidwai Nagar",
-//     "Phillaur",
-//     "Raekot",
-//     "Sarabha Nagar",
-//   ],
-//   Moga: [
-//     "Baghapurana",
-//     "Buggipura, Moga (Station)",
-//     "Buttar, Moga (Station)",
-//     "Dharamkot, Moga",
-//     "Kot-Ise-Khan, Moga (Station)",
-//     "Makhu",
-//     "Moga",
-//     "Nihal Singh Wala, Moga (Station)",
-//     "Singhanwala, Moga",
-//     "Zira",
-//   ],
-//   Muktsar: [
-//     "Abohar",
-//     "Bhagsar",
-//     "Danewala",
-//     "Fazilka",
-//     "Gidderbaha (Station)",
-//     "Jaiton",
-//     "Jalalabad",
-//     "Kotkapura",
-//     "Malout Pind",
-//     "Malout",
-//     "Muktsar, Bir Sarkar",
-//     "Muktsar",
-//     "Panjgaraian (Station)",
-//     "Sikhwala",
-//   ],
-//   Sahnewal: [
-//     "Bhammian Kalan (Station)",
-//     "Jamalpur",
-//     "Khanna",
-//     "Khanpur-Jassar-Sangowal-Rania",
-//     "Machhiwara",
-//     "Machian Khurd",
-//     "Sahnewal",
-//     "Samrala",
-//   ],
-//   Tanda: [
-//     "Bhogpur",
-//     "Bholath",
-//     "Dasuya",
-//     "Mukerian",
-//     "Tanda",
-//     "Sri Hargobindpur",
-//   ],
-//   "Tarn Taran": [
-//     "Akalgarh (Station)",
-//     "Beas",
-//     "Bhikhiwind",
-//     "Bhojian",
-//     "Chabhal (Station)",
-//     "Fatehabad (Station)",
-//     "Harike",
-//     "Jandiala Guru",
-//     "Khem Karan",
-//     "Patti",
-//     "Tarn Taran",
-//   ],
-// };
-
-// const events = [
-//   "100m Boys",
-//   "100m Girls",
-//   "200m Boys",
-//   "200m Girls",
-//   "400m Boys",
-//   "400m Girls",
-//   "800m Boys",
-//   "800m Girls",
-//   "1500m Boys",
-//   "5000m Boys",
-//   "4x100m Relay Boys",
-//   "4x100m Relay Girls",
-//   "Long Jump Boys",
-//   "Long Jump Girls",
-//   "High Jump Boys",
-//   "High Jump Girls",
-//   "Shot Put Boys",
-//   "Shot Put Girls",
-//   "Discus Throw Boys",
-//   "Discus Throw Girls",
-//   "Javelin Throw Boys",
-//   "Javelin Throw Girls",
-//   "Basketball Boys",
-//   "Basketball Girls",
-//   "Volleyball Boys",
-//   "Kho-Kho Girls",
-//   "Group Song (Indian)",
-//   "Musical Album",
-//   "Classical Solo Dance",
-//   "Bhangra",
-//   "Essay Writing",
-//   "Poem Writing",
-//   "Extempore",
-//   "Pencil Drawing",
-//   "Water Color Painting",
-//   "Mobile Photography",
-//   "Mimicry",
-//   "Mono Act",
-//   "Bible Skit",
-//   "Fancy Dress",
-//   "Tableau",
-//   "Cultural Procession",
-// ];

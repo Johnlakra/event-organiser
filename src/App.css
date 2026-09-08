@@ -1,24 +1,15 @@
 .app {
-  font-family: 'Open Sans', sans-serif;
-  color: #2f3138;
-  background-color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--bsm-font);
+  color: var(--bsm-text);
+  background: var(--bsm-bg);
 }
 
-.app-main {
-  padding-top: 80px; /* Adjust this value based on your header height */
-  min-height: calc(100vh - 80px - 100px); /* Adjust these values based on your header and footer heights */
-}
-
-h1 {
-  color: #0e1b4d;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-/* Add this to your App.css or create a new global CSS file */
 .page-content {
-  width: 96%;
-  padding-top: 80px; /* Adjust this value based on your header height */
-  padding-bottom: 40px;
-  min-height: calc(100vh - 120px); /* Adjust based on header and footer heights */
+  flex: 1 1 auto;
+  width: 100%;
 }
+
+h1 { color: var(--bsm-text); }

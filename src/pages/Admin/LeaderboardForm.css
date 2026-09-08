@@ -148,3 +148,29 @@
     padding: 12px;
   }
 }
+
+/* --- Year picker --- */
+
+.year-picker {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid #e3e8ee;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
+.year-picker label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #52616f;
+}
+
+.year-picker-hint {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: #66788a;
+}

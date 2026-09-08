@@ -1,178 +1,90 @@
 .live-events {
-  padding: 20px 0;
+  padding: 0;
 }
 
-.live-container {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 0 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.live-none {
+  margin: 0;
+  font-size: 14.5px;
+  color: #6d7590;
 }
 
-.section-header {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.section-header h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  color: #0e1b4d;
-}
-
-.mobile-section-header {
-  display: none;
-}
-
-.event-grid {
+.live-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+  gap: 10px;
 }
 
-.event-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
-  height: 160px;
-  width: 600px;
-}
-
-.event-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.event-card.live {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(248, 34, 73, 0.7), 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  70% {
-    box-shadow: 0 0 0 10px rgba(248, 34, 73, 0), 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(248, 34, 73, 0), 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.event-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.event-details {
-  padding: 20px;
-  position: relative;
+.stage-card {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #e3e7f3;
+  border-radius: 6px;
 }
 
-.event-details h3 {
+.stage-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stage-name {
+  min-width: 0;
+  font-size: 11px;
   font-weight: 700;
-  font-size: 20px;
-  margin-bottom: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #6d7590;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stage-live {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #f82249;
+}
+
+.stage-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f82249;
+  animation: stageLivePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes stageLivePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.stage-current {
+  margin: 0;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
   color: #0e1b4d;
 }
 
-.next-event {
-  font-size: 15px;
-  color: #112363;
-  margin-bottom: 8px;
-}
-
-.venue {
-  font-size: 15px;
-  color: #f82249;
-  margin-top: 8px;
-  padding-right: 80px;
-}
-
-.live-indicator {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background-color: rgba(248, 34, 73, 0.9);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
+.stage-next {
+  margin: 0;
+  min-width: 0;
   font-size: 13px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 4px rgba(248, 34, 73, 0.4);
+  color: #6d7590;
 }
 
-@media (max-width: 1200px) {
-  .event-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
-@media (max-width: 992px) {
-  .event-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .event-card{
-    width: 500px;
-  }
-}
-
-@media (max-width: 768px) {
-  .mobile-section-header {
-    display: block;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .mobile-section-header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #0e1b4d;
-  }
-
-  .section-header {
-    display: none;
-  }
-
-  .event-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-
-  .event-card {
-    width: 400px;
-    margin: 0 auto;
-    height: 160px;
-  }
-
-  .event-details h3 {
-    font-size: 18px;
-  }
-
-  .next-event, .venue {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 576px) {
-  .event-card {
-    height: 160px;
-    width: 300px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .stage-live-dot { animation: none; }
 }

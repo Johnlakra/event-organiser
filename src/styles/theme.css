@@ -1,0 +1,221 @@
+/**
+ * BSMCSM 2026 design tokens.
+ * Ported from the "Website redesign for 2026" design canvas
+ * (BSMCSM 2026.dc.html). Every page pulls its colours from here.
+ */
+
+:root {
+  --bsm-ink: #060c22;
+  --bsm-navy: #0e1b4d;
+  --bsm-accent: #f82249;
+  --bsm-accent-dark: #c4123a;
+  --bsm-accent-soft: #f5b3c1;
+
+  --bsm-bg: #f6f7fd;
+  --bsm-surface: #ffffff;
+  --bsm-surface-alt: #f7f8fc;
+
+  --bsm-text: #1c2333;
+  --bsm-body: #4a5273;
+  --bsm-muted: #5b6482;
+  --bsm-muted-2: #6d7590;
+  --bsm-muted-3: #8b93ad;
+  --bsm-on-dark: #b9c0d6;
+  --bsm-on-dark-dim: #8d97b4;
+
+  --bsm-border: #e3e7f3;
+  --bsm-border-strong: #d5dbeb;
+  --bsm-border-soft: #eef0f7;
+
+  --bsm-notice-bg: #fff2f5;
+  --bsm-notice-border: #f6d3dc;
+  --bsm-notice-text: #5d2230;
+
+  --bsm-gold: #c9a227;
+  --bsm-silver: #8a94a6;
+  --bsm-bronze: #b06a3b;
+
+  --bsm-radius: 6px;
+  --bsm-radius-sm: 3px;
+  --bsm-shell: 1140px;
+  --bsm-font: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --bsm-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+
+@keyframes bsmPulse {
+  0% { box-shadow: 0 0 0 0 rgba(248, 34, 73, 0.45); }
+  70% { box-shadow: 0 0 0 12px rgba(248, 34, 73, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(248, 34, 73, 0); }
+}
+
+/* --- Layout primitives --- */
+
+.bsm-shell {
+  max-width: var(--bsm-shell);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.bsm-page {
+  margin: 0 auto;
+  padding: 40px 16px 60px;
+}
+
+.bsm-page--narrow { max-width: 900px; }
+.bsm-page--wide { max-width: 1040px; }
+.bsm-page--tight { max-width: 820px; }
+.bsm-page--form { max-width: 760px; }
+
+.bsm-page-title {
+  margin: 0 0 6px;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  color: var(--bsm-text);
+}
+
+.bsm-page-lede {
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: var(--bsm-muted);
+}
+
+/* --- Cards --- */
+
+.bsm-card {
+  background: var(--bsm-surface);
+  border: 1px solid var(--bsm-border);
+  border-radius: var(--bsm-radius);
+  padding: 24px;
+}
+
+.bsm-card--dark {
+  background: var(--bsm-navy);
+  border-color: var(--bsm-navy);
+  color: #fff;
+}
+
+.bsm-section-heading {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--bsm-accent);
+}
+
+.bsm-card--dark .bsm-section-heading { color: #fff; }
+
+.bsm-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bsm-muted-2);
+}
+
+/* --- Tabs (years, days, admin) --- */
+
+.bsm-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.bsm-tab {
+  position: relative;
+  background: var(--bsm-surface);
+  border: 1px solid var(--bsm-border-strong);
+  border-radius: var(--bsm-radius-sm);
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bsm-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bsm-tab:hover { border-color: var(--bsm-accent); }
+
+.bsm-tab-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--bsm-accent);
+  display: block;
+}
+
+/* --- Buttons --- */
+
+.bsm-btn {
+  display: inline-block;
+  background: var(--bsm-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--bsm-radius-sm);
+  padding: 14px 22px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bsm-btn:hover { background: var(--bsm-accent-dark); color: #fff; }
+.bsm-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.bsm-btn--ghost {
+  background: none;
+  border: 1px solid var(--bsm-border-strong);
+  color: var(--bsm-text);
+  padding: 10px 16px;
+  font-size: 12.5px;
+}
+
+.bsm-btn--ghost:hover {
+  background: var(--bsm-surface-alt);
+  color: var(--bsm-text);
+  border-color: var(--bsm-accent);
+}
+
+/* --- Notice strip --- */
+
+.bsm-notice {
+  background: var(--bsm-notice-bg);
+  border: 1px solid var(--bsm-notice-border);
+  border-radius: var(--bsm-radius);
+  padding: 16px 18px;
+  color: var(--bsm-notice-text);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.bsm-empty {
+  background: var(--bsm-surface);
+  border: 1px dashed #ccd3e6;
+  border-radius: var(--bsm-radius);
+  padding: 34px 22px;
+  text-align: center;
+}
+
+.bsm-empty-title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--bsm-navy);
+}
+
+.bsm-empty-body {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--bsm-muted);
+}
