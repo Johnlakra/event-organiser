@@ -23,6 +23,9 @@ const toId = (value) => (value === "" || value === null ? "" : Number(value));
 const LeaderboardForm = () => {
   const [formData, setFormData] = useState({});
   const [selectedYearId, setSelectedYearId] = useState(null);
+  // Kept outside `render`, which is rebuilt from the server payload after every
+  // save/delete and would otherwise collapse the panel the user is working in.
+  const [expandedEventId, setExpandedEventId] = useState(null);
   const dispatch = useDispatch();
   const data = useSelector(dropdownState);
   const [load, setLoad] = useState({ submit: false });
@@ -151,14 +154,7 @@ const LeaderboardForm = () => {
     (render.places ?? []).filter((item) => item.type === type);
 
   const toggleEvent = (event) =>
-    setRender((prev) => ({
-      ...prev,
-      events: prev.events.map((item) =>
-        item.id === event.id
-          ? { ...item, expandEvent: !item.expandEvent }
-          : { ...item, expandEvent: false }
-      ),
-    }));
+    setExpandedEventId((prev) => (prev === event.id ? null : event.id));
 
   const isEventComplete = (type, event) =>
     renderPositions(type)
@@ -168,10 +164,7 @@ const LeaderboardForm = () => {
   const fetchDropdowns = useCallback(() => {
     setRender((prev) => ({
       ...prev,
-      events: (data.events ?? []).map((item) => ({
-        ...item,
-        expandEvent: false,
-      })),
+      events: data.events ?? [],
       places: data.places ?? [],
       deanery: data.deanery ?? [],
       parish: data.parish ?? [],
@@ -259,135 +252,139 @@ const LeaderboardForm = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {render.events.map((event, eventIndex) => (
-          <div key={event.id} className="event-item">
-            <button
-              type="button"
-              className="event-header"
-              onClick={() => toggleEvent(event)}
-            >
-              <span>{`${eventIndex + 1}. ${event.name}`}</span>
-              <div className="event-status">
-                {isEventComplete(event.type, event.id) && (
-                  <Check size={20} className="check-icon" />
-                )}
-                {event.expandEvent ? (
-                  <ChevronUp size={20} />
-                ) : (
-                  <ChevronDown size={20} />
-                )}
-              </div>
-            </button>
+        {render.events.map((event, eventIndex) => {
+          const isExpanded = expandedEventId === event.id;
 
-            {event.expandEvent && (
-              <div className="event-details">
-                {renderPositions(event.type).map((position) => (
-                  <div key={position.id} className="position-item">
-                    <div className="position-header">
-                      <h4 className="position-title">
-                        Positions {position.name}
-                      </h4>
-                      <button
-                        type="button"
-                        className="add-entry-button"
-                        onClick={() => handleAddEntry(event.id, position.id)}
-                      >
-                        <Plus size={18} />
-                      </button>
-                    </div>
+          return (
+            <div key={event.id} className="event-item">
+              <button
+                type="button"
+                className="event-header"
+                onClick={() => toggleEvent(event)}
+              >
+                <span>{`${eventIndex + 1}. ${event.name}`}</span>
+                <div className="event-status">
+                  {isEventComplete(event.type, event.id) && (
+                    <Check size={20} className="check-icon" />
+                  )}
+                  {isExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </div>
+              </button>
 
-                    {(
-                      formData[event.id]?.[position.id] ?? [
-                        {
-                          event: event.id,
-                          position: position.id,
-                          deanery: "",
-                          parish: "",
-                        },
-                      ]
-                    ).map((item, index) => (
-                      <div
-                        key={`${event.id}_${position.id}_${item.id ?? index}`}
-                        style={{ marginBottom: 10, display: "flex" }}
-                      >
-                        <div style={{ width: "100%", marginRight: 10 }}>
-                          <select
-                            onChange={(e) =>
-                              handlePositionChange(
-                                event.id,
-                                position.id,
-                                index,
-                                "deanery",
-                                e.target.value
-                              )
-                            }
-                            value={item?.deanery ?? ""}
-                            className="select-input"
-                          >
-                            <option value="">Select Deanery</option>
-                            {render.deanery?.map((deanery) => (
-                              <option key={deanery.id} value={deanery.id}>
-                                {deanery.name}
-                              </option>
-                            ))}
-                          </select>
+              {isExpanded && (
+                <div className="event-details">
+                  {renderPositions(event.type).map((position) => (
+                    <div key={position.id} className="position-item">
+                      <div className="position-header">
+                        <h4 className="position-title">
+                          Positions {position.name}
+                        </h4>
+                        <button
+                          type="button"
+                          className="add-entry-button"
+                          onClick={() => handleAddEntry(event.id, position.id)}
+                        >
+                          <Plus size={18} />
+                        </button>
+                      </div>
 
-                          {Boolean(item?.deanery) && (
+                      {(
+                        formData[event.id]?.[position.id] ?? [
+                          {
+                            event: event.id,
+                            position: position.id,
+                            deanery: "",
+                            parish: "",
+                          },
+                        ]
+                      ).map((item, index) => (
+                        <div
+                          key={`${event.id}_${position.id}_${item.id ?? index}`}
+                          style={{ marginBottom: 10, display: "flex" }}
+                        >
+                          <div style={{ width: "100%", marginRight: 10 }}>
                             <select
                               onChange={(e) =>
                                 handlePositionChange(
                                   event.id,
                                   position.id,
                                   index,
-                                  "parish",
+                                  "deanery",
                                   e.target.value
                                 )
                               }
-                              value={item.parish ?? ""}
+                              value={item?.deanery ?? ""}
                               className="select-input"
                             >
-                              <option value="">Select Parish</option>
-                              {render.parish
-                                ?.filter(
-                                  (parish) =>
-                                    Number(parish.deanery_id) ===
-                                    Number(item.deanery)
-                                )
-                                ?.map((parish) => (
-                                  <option key={parish.id} value={parish.id}>
-                                    {parish.name}
-                                  </option>
-                                ))}
+                              <option value="">Select Deanery</option>
+                              {render.deanery?.map((deanery) => (
+                                <option key={deanery.id} value={deanery.id}>
+                                  {deanery.name}
+                                </option>
+                              ))}
                             </select>
-                          )}
-                        </div>
 
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "end",
-                            cursor: item?.id ? "pointer" : "",
-                            width: 32,
-                          }}
-                          onClick={() =>
-                            Boolean(item?.id) && handleDelete(item.id)
-                          }
-                        >
-                          <Trash
-                            style={{ display: item?.id ? "block" : "none" }}
-                            size={32}
-                            color="#f67373"
-                          />
+                            {Boolean(item?.deanery) && (
+                              <select
+                                onChange={(e) =>
+                                  handlePositionChange(
+                                    event.id,
+                                    position.id,
+                                    index,
+                                    "parish",
+                                    e.target.value
+                                  )
+                                }
+                                value={item.parish ?? ""}
+                                className="select-input"
+                              >
+                                <option value="">Select Parish</option>
+                                {render.parish
+                                  ?.filter(
+                                    (parish) =>
+                                      Number(parish.deanery_id) ===
+                                      Number(item.deanery)
+                                  )
+                                  ?.map((parish) => (
+                                    <option key={parish.id} value={parish.id}>
+                                      {parish.name}
+                                    </option>
+                                  ))}
+                              </select>
+                            )}
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "end",
+                              cursor: item?.id ? "pointer" : "",
+                              width: 32,
+                            }}
+                            onClick={() =>
+                              Boolean(item?.id) && handleDelete(item.id)
+                            }
+                          >
+                            <Trash
+                              style={{ display: item?.id ? "block" : "none" }}
+                              size={32}
+                              color="#f67373"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
 
         <button type="submit" className="submit-button" disabled={load.submit}>
           {load.submit
