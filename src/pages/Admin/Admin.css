@@ -220,3 +220,111 @@ body {
     min-width: 120px;
   }
 }
+/* --- BSMCSM 2026 design --- */
+
+.admin-login {
+  background: var(--bsm-surface);
+  border: 1px solid var(--bsm-border);
+  border-radius: var(--bsm-radius);
+  padding: 30px;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+.admin-login h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--bsm-text);
+}
+
+.admin-login .password-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--bsm-border-strong);
+  border-radius: var(--bsm-radius-sm);
+  background: var(--bsm-surface);
+  color: var(--bsm-text);
+}
+
+.admin-login .login-btn {
+  width: 100%;
+  background: var(--bsm-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--bsm-radius-sm);
+  padding: 13px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.admin-login .login-btn:hover { background: var(--bsm-accent-dark); }
+
+.admin-panel .admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.admin-panel .admin-header h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+}
+
+.admin-panel .logout-btn {
+  background: none;
+  border: 1px solid var(--bsm-border-strong);
+  border-radius: var(--bsm-radius-sm);
+  padding: 10px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--bsm-text);
+}
+
+.admin-panel .tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border: none;
+}
+
+.admin-panel .tabs button {
+  position: relative;
+  background: var(--bsm-surface);
+  border: 1px solid var(--bsm-border-strong);
+  border-radius: var(--bsm-radius-sm);
+  padding: 11px 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bsm-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-panel .tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--bsm-accent);
+  display: block;
+}

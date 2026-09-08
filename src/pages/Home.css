@@ -1,17 +1,241 @@
-.welcome-title {
-    font-size: 32px;
-    font-weight: 700;
-    text-align: center;
-    color: #0e1b4d;
-    margin-bottom: 30px;
+.bsm-hero {
+  background: var(--bsm-ink);
+  color: #fff;
+  padding: 52px 0 46px;
 }
 
-.home-content {
-    width: 100%;
+.bsm-hero-inner { max-width: 760px; margin-inline: auto; }
+
+.bsm-hero-scripture {
+  font-family: var(--bsm-serif);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #f3cfd7;
+  margin: 0 0 26px;
 }
 
-.mobile-section-header {
-    display: block;
-    margin-bottom: 20px;
-    text-align: center;
+.bsm-hero-edition {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bsm-accent);
 }
+
+.bsm-hero-title {
+  margin: 0 0 20px;
+  font-size: clamp(32px, 5.2vw, 58px);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.bsm-hero-window { margin: 0 0 6px; font-size: 19px; font-weight: 600; }
+
+.bsm-hero-venue {
+  margin: 0 0 26px;
+  font-size: 15px;
+  color: var(--bsm-on-dark);
+}
+
+.bsm-countdown { margin: 0 0 28px; }
+
+.bsm-countdown-label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bsm-on-dark-dim);
+}
+
+.bsm-countdown-parts { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.bsm-countdown-part {
+  min-width: 78px;
+  background: #101833;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+
+.bsm-countdown-value {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.bsm-countdown-unit {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bsm-on-dark-dim);
+  margin-top: 6px;
+}
+
+.bsm-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.bsm-btn--outline {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+.bsm-btn--outline:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+/* --- Notice --- */
+
+.bsm-notice-strip {
+  background: var(--bsm-notice-bg);
+  border-bottom: 1px solid var(--bsm-notice-border);
+}
+
+.bsm-notice-inner {
+  padding-block: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.bsm-notice-tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bsm-accent);
+}
+
+.bsm-notice-text { font-size: 14.5px; color: var(--bsm-notice-text); flex: 1 1 320px; }
+
+/* --- Sections --- */
+
+.bsm-home-section { padding-block: 44px 8px; }
+.bsm-home-section--last { padding-bottom: 56px; }
+
+.bsm-home-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.bsm-home-heading {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.bsm-eyebrow {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bsm-accent);
+}
+
+.bsm-updating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bsm-accent);
+}
+
+.bsm-updating-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bsm-accent);
+  display: block;
+  animation: bsmPulse 2s infinite;
+}
+
+/* --- Stats --- */
+
+.bsm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--bsm-border);
+  border: 1px solid var(--bsm-border);
+  border-radius: var(--bsm-radius);
+  overflow: hidden;
+}
+
+.bsm-stat { background: var(--bsm-surface); padding: 22px 18px; }
+
+/* Four stats fit across from 700px up; below that keep them as a 2x2 block
+   rather than letting auto-fit drop them into a single tall column. */
+@media (max-width: 700px) {
+  .bsm-stats { grid-template-columns: repeat(2, 1fr); }
+  .bsm-stat { padding: 18px 14px; }
+  .bsm-stat-value { font-size: 26px; }
+  .bsm-stat-label { font-size: 11px; letter-spacing: 0.08em; }
+}
+
+.bsm-stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--bsm-navy);
+  line-height: 1;
+}
+
+.bsm-stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bsm-muted-2);
+  margin-top: 8px;
+}
+
+/* --- Podium --- */
+
+.bsm-archive-link {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid var(--bsm-accent);
+  padding-bottom: 3px;
+  white-space: nowrap;
+}
+
+.bsm-podium {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.bsm-podium-card {
+  background: var(--bsm-surface);
+  border: 1px solid var(--bsm-border);
+  border-top: 3px solid var(--bsm-gold);
+  border-radius: var(--bsm-radius);
+  padding: 18px 20px;
+}
+
+.bsm-podium-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--bsm-navy);
+  margin: 6px 0 4px;
+  line-height: 1.15;
+}
+
+.bsm-podium-meta { font-size: 14px; color: var(--bsm-body); }

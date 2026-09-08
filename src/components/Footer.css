@@ -1,0 +1,33 @@
+.bsm-footer {
+  background: var(--bsm-ink);
+  color: var(--bsm-on-dark);
+  padding: 34px 0;
+}
+
+.bsm-footer-inner {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bsm-footer-brand {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bsm-footer-org {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bsm-footer-copy {
+  margin: 0;
+  font-size: 13.5px;
+}

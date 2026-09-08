@@ -1,73 +1,60 @@
-.about-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+.bsm-about-block { margin-bottom: 16px; }
+
+.bsm-key-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
 }
 
-.main-title {
-    color: #0e1b4d;
-    text-align: center;
-    margin-bottom: 30px;
+.bsm-key-info-label { margin-bottom: 5px; }
+
+.bsm-key-info-value {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--bsm-navy);
 }
 
-section {
-    margin-bottom: 30px;
+.bsm-rules {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
 }
 
-h2 {
-    color: #f82249;
-    border-bottom: 2px solid #f82249;
-    padding-bottom: 10px;
-    margin-left: 10px;
-    margin-bottom: 15px;
+.bsm-rules li { font-size: 15px; line-height: 1.5; }
+
+.bsm-points {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
 }
 
-ul {
-    list-style-type: none;
-    padding-left: 0;
+.bsm-points-label { margin-bottom: 8px; }
+.bsm-points-lines { font-size: 15px; line-height: 1.7; }
+
+.bsm-tie-breaker {
+  margin: 18px 0 0;
+  font-size: 14.5px;
+  color: var(--bsm-body);
+  line-height: 1.55;
 }
 
-li {
-    margin-bottom: 10px;
-    padding-left: 20px;
-    position: relative;
+.bsm-contact-name { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+
+.bsm-contact-address {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: var(--bsm-on-dark);
+  line-height: 1.55;
 }
 
-li:before {
-    content: "•";
-    color: #f82249;
-    position: absolute;
-    left: 0;
-}
+.bsm-contact-line { margin: 0; font-size: 15px; }
+.bsm-contact-line a { color: #fff; }
 
-.contact,
-.about-icym {
-    background-color: #f6f7fd;
-    padding: 20px;
-    border-radius: 5px;
-    margin-top: 30px;
-}
-
-.contact-details {
-    margin-top: 15px;
-}
-
-.contact-details p {
-    margin: 5px 0;
-}
-
-.contact-details a {
-    color: #f82249;
-    text-decoration: none;
-}
-
-.contact-details a:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-    .about-container {
-        padding: 10px;
-    }
+.bsm-contact-director {
+  margin: 18px 0 0;
+  font-size: 14.5px;
+  color: var(--bsm-on-dark);
+  line-height: 1.55;
 }

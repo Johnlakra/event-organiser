@@ -1,89 +1,123 @@
-.leaderboard-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.deanery-item,
-.parish-item {
-  margin-bottom: 10px;
-  border: 1px solid #e0e0e0;
+.bsm-board-row {
+  border: 1px solid var(--bsm-border);
   border-radius: 4px;
   overflow: hidden;
+  margin-bottom: 8px;
+  background: var(--bsm-surface);
 }
 
-.deanery-header,
-.parish-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.bsm-board-header {
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 15px;
-  background-color: #f5f5f5;
+  background: var(--bsm-surface-alt);
   border: none;
   text-align: left;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  font: inherit;
+  font-weight: 700;
 }
 
-.name-container {
-  flex: 0 0 170px;
+.bsm-board-header:hover { background: #eff1f8; }
+
+.bsm-board-rank {
+  flex: 0 0 26px;
+  font-size: 14px;
+  color: var(--bsm-muted-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.bsm-board-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 15.5px;
+  color: var(--bsm-navy);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 10px;
 }
 
-.deanery-header:hover,
-.parish-header:hover {
-  background-color: #e0e0e0;
+.bsm-board-points {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
 
-.parish-header {
-  background-color: #f9f9f9;
-  padding: 10px 15px;
+.bsm-board-caret {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--bsm-muted-3);
+  width: 14px;
+  text-align: center;
 }
 
-.deanery-details,
-.parish-details {
-  padding: 15px;
-}
+.bsm-board-body { padding: 12px 15px 15px; }
 
-.parish-item {
-  margin-bottom: 5px;
+.bsm-board-blank { margin: 0; font-size: 14px; color: var(--bsm-muted-2); }
+
+.bsm-parish { border-bottom: 1px solid var(--bsm-border-soft); }
+.bsm-parish:last-child { border-bottom: none; }
+
+.bsm-parish-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 4px;
+  background: none;
   border: none;
-  border-radius: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
 }
 
-table {
+.bsm-parish-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bsm-parish-points {
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.bsm-parish-body { padding: 4px 0 14px; overflow-x: auto; }
+
+.bsm-board-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 340px;
 }
 
-th,
-td {
-  padding: 10px;
+.bsm-board-table th {
   text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 9px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bsm-muted-2);
+  background: var(--bsm-surface-alt);
+  border-bottom: 1px solid var(--bsm-border);
 }
 
-th {
-  background-color: #f5f5f5;
-  font-weight: bold;
+.bsm-board-table td {
+  padding: 9px 8px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--bsm-border-soft);
 }
 
-@media (max-width: 768px) {
-
-  .deanery-header,
-  .parish-header {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  th,
-  td {
-    padding: 8px;
-    font-size: 14px;
-  }
+.bsm-board-table .is-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
+
+.bsm-board-table .is-muted { color: var(--bsm-body); }

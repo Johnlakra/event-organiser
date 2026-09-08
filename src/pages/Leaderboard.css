@@ -1,9 +1,48 @@
-.leaderboard-page .page-content {
-    width: 100%;
+.bsm-board-notice { margin-bottom: 18px; }
+
+.bsm-board-status {
+  padding: 28px 4px;
+  font-size: 15px;
+  color: var(--bsm-muted);
 }
 
-@media (max-width: 768px) {
-    .leaderboard-page .page-content {
-        padding: 0 10px;
-    }
+.bsm-linklike {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--bsm-accent);
+  text-decoration: underline;
+  cursor: pointer;
 }
+
+.bsm-board-podium {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.bsm-board-podium-card {
+  background: var(--bsm-navy);
+  color: #fff;
+  border-radius: var(--bsm-radius);
+  padding: 20px;
+}
+
+.bsm-board-podium-place {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bsm-accent-soft);
+}
+
+.bsm-board-podium-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  line-height: 1.15;
+}
+
+.bsm-board-podium-meta { font-size: 14px; color: var(--bsm-on-dark); }
