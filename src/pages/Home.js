@@ -10,6 +10,11 @@ import { pickArchiveYear } from "../utils/years";
 import { MEET, HOME_NOTICE, HOME_STATS } from "../data/meet2026";
 import "./Home.css";
 
+/* Bump HERO_VIDEO_VERSION whenever the file changes: the asset is served with a
+   one-year immutable cache, so a new query string is what busts it. */
+const HERO_VIDEO_VERSION = "2";
+const HERO_VIDEO_SRC = `${process.env.PUBLIC_URL}/media/BSMCSM-hero.mp4?v=${HERO_VIDEO_VERSION}`;
+
 const PODIUM_PLACES = [
   { label: "1st · Champions", accent: "var(--bsm-gold)" },
   { label: "2nd · Runners-up", accent: "var(--bsm-silver)" },
@@ -68,12 +73,12 @@ const Home = () => {
       <section className="bsm-hero">
         <video
           className="bsm-hero-video"
-          src={`${process.env.PUBLIC_URL}/media/BSMCSM.mp4`}
+          src={HERO_VIDEO_SRC}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           aria-hidden="true"
           tabIndex={-1}
         />
