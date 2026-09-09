@@ -9,10 +9,30 @@ const Footer = () => (
         <p className="bsm-footer-org">
           Organised by the Youth Commission
           <br />
-          Diocese of Jalandhar
+          <a
+            className="bsm-footer-link"
+            href="https://jalandhardiocese.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Diocese of Jalandhar
+          </a>
         </p>
       </div>
-      <p className="bsm-footer-copy">© 2026 BSMCSM. All rights reserved.</p>
+      <div className="bsm-footer-right">
+        <p className="bsm-footer-copy">© 2026 BSMCSM. All rights reserved.</p>
+        <p className="bsm-footer-powered">
+          Powered by{" "}
+          <a
+            className="bsm-footer-link"
+            href="https://www.softechsmartsolutions.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Softech Smart Solutions
+          </a>
+        </p>
+      </div>
     </div>
   </footer>
 );
