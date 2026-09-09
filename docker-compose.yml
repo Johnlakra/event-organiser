@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        REACT_APP_ADMIN_PASSWORD: ${REACT_APP_ADMIN_PASSWORD}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
