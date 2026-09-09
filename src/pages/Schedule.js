@@ -9,6 +9,11 @@ import "./Schedule.css";
 
 const REFRESH_INTERVAL_MS = 60 * 1000;
 
+const splitDayLabel = (label) => {
+  const [title, subtitle] = String(label).split("·");
+  return { title: title.trim(), subtitle: (subtitle ?? "").trim() };
+};
+
 const findTodayIndex = (schedule, now) => {
   const key = toDayKey(now);
   return schedule.findIndex((day) => day.date === key);
@@ -42,18 +47,26 @@ const Schedule = () => {
         <strong>{MEET_NOTICE.label}:</strong> {MEET_NOTICE.body}
       </div>
 
-      <div className="bsm-tabs">
-        {SCHEDULE_2026.map((day, index) => (
-          <button
-            key={day.date}
-            type="button"
-            className="bsm-tab"
-            onClick={() => setActiveTab(index)}
-          >
-            {day.label ?? day.date}
-            {index === activeTab && <span className="bsm-tab-underline" />}
-          </button>
-        ))}
+      <div className="bsm-tabs bsm-tabs--days" role="tablist" aria-label="Schedule day">
+        {SCHEDULE_2026.map((day, index) => {
+          const { title, subtitle } = splitDayLabel(day.label ?? day.date);
+          const isActive = index === activeTab;
+
+          return (
+            <button
+              key={day.date}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              className={`bsm-tab bsm-tab--day${isActive ? " is-active" : ""}`}
+              onClick={() => setActiveTab(index)}
+            >
+              <span className="bsm-tab-title">{title}</span>
+              {subtitle && <span className="bsm-tab-subtitle">{subtitle}</span>}
+              {isActive && <span className="bsm-tab-underline" />}
+            </button>
+          );
+        })}
       </div>
 
       <div className="bsm-schedule-list">

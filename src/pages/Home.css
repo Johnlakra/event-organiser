@@ -1,10 +1,40 @@
 .bsm-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: var(--bsm-ink);
   color: #fff;
   padding: 52px 0 46px;
 }
 
-.bsm-hero-inner { max-width: 760px; margin-inline: auto; }
+/* Fills the hero box at any aspect ratio without stretching the frame. */
+.bsm-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* The hero's own background colour, kept as a readability overlay. */
+.bsm-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bsm-ink);
+  opacity: 0.72;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsm-hero-video { display: none; }
+  .bsm-hero-overlay { opacity: 1; }
+}
+
+.bsm-hero-inner { max-width: 760px; margin-inline: auto; position: relative; }
 
 .bsm-hero-scripture {
   font-family: var(--bsm-serif);

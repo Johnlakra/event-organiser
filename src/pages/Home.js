@@ -66,6 +66,18 @@ const Home = () => {
   return (
     <div className="bsm-home">
       <section className="bsm-hero">
+        <video
+          className="bsm-hero-video"
+          src={`${process.env.PUBLIC_URL}/media/BSMCSM.mp4`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+        <div className="bsm-hero-overlay" aria-hidden="true" />
         <div className="bsm-shell bsm-hero-inner">
           <p className="bsm-hero-scripture">
             {MEET.scripture.text} — {MEET.scripture.reference}
