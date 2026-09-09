@@ -5,6 +5,13 @@
   background: var(--bsm-ink);
   color: #fff;
   padding: 52px 0 46px;
+  /* Fill the first screen below the sticky header; svh keeps mobile browser
+     chrome from cropping the hero, and the section still grows if content
+     outruns the viewport. */
+  min-height: calc(100vh - var(--bsm-header-h));
+  min-height: calc(100svh - var(--bsm-header-h));
+  display: grid;
+  align-content: center;
 }
 
 /* Fills the hero box at any aspect ratio without stretching the frame. */

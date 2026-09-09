@@ -7,7 +7,7 @@
 }
 
 .bsm-header-bar {
-  min-height: 62px;
+  min-height: var(--bsm-header-h);
   display: flex;
   align-items: center;
   justify-content: space-between;

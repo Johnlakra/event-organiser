@@ -38,6 +38,7 @@
   --bsm-radius: 6px;
   --bsm-radius-sm: 3px;
   --bsm-shell: 1140px;
+  --bsm-header-h: 62px;
   --bsm-font: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --bsm-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
 }
