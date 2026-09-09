@@ -7,7 +7,7 @@
 
 export const MEET = {
   shortName: "BSMCSM 2026",
-  title: "Bp. Symphorian Memorial Cultural & Sports Meet",
+  title: "Bp.  Memorial Cultural & Sports Meet",
   edition: "5th Diocesan Meet · Inter-Deanery",
   window: "10 September, 3:00 pm — 12 September, 2:00 pm 2026",
   venue: "Sacred Heart Convent School, BRS Nagar, Ludhiana",
