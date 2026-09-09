@@ -83,7 +83,7 @@
   color: var(--bsm-on-dark-dim);
 }
 
-.bsm-countdown-parts { display: flex; gap: 10px; flex-wrap: wrap; }
+.bsm-countdown-parts { display: flex; gap: 10px; flex-wrap: nowrap; }
 
 .bsm-countdown-part {
   min-width: 78px;
@@ -104,8 +104,29 @@
   font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--bsm-on-dark-dim);
   margin-top: 6px;
+}
+
+/* Shrink the four blocks only as far as needed to hold a single row. */
+@media (max-width: 640px) {
+  .bsm-countdown-parts { gap: 6px; }
+
+  .bsm-countdown-part {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .bsm-countdown-value { font-size: clamp(20px, 6vw, 28px); }
+
+  .bsm-countdown-unit {
+    font-size: clamp(8.5px, 2.4vw, 10.5px);
+    letter-spacing: 0.06em;
+    margin-top: 5px;
+  }
 }
 
 .bsm-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
