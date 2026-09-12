@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import LeaderBoard from "../components/LeaderBoard";
 import YearTabs from "../components/YearTabs";
-import { useWinnersSalute } from "../hooks/useWinnersSalute";
 import { getLeaderBoardItems } from "../redux/leaderBoard/leaderBoardSlice";
 import { getDropdown } from "../redux/dropdown/dropdownSlice";
 import {
@@ -113,19 +112,10 @@ const Leaderboard = () => {
     return isCurrentYear ? emptyBoardFrom(deaneries) : [];
   }, [hasResults, rows, isCurrentYear, deaneries]);
 
-  /** Champions / runners-up / third place cards, live year and archive alike. */
   const podium = useMemo(
-    () => (hasResults ? buildPodium(board) : []),
-    [hasResults, board]
-  );
-
-  /** The live edition also gets a confetti salute on the first landing. */
-  const winners = useMemo(
-    () => (hasResults && isCurrentYear ? buildPodium(board) : []),
+    () => (hasResults && !isCurrentYear ? buildPodium(board) : []),
     [hasResults, isCurrentYear, board]
   );
-
-  useWinnersSalute(winners, selectedYear?.name);
 
   return (
     <section className="bsm-page bsm-page--wide">
@@ -179,7 +169,7 @@ const Leaderboard = () => {
           )}
 
           {board.length > 0 ? (
-            <LeaderBoard data={board} celebrateTopThree={isCurrentYear} />
+            <LeaderBoard data={board} />
           ) : (
             <div className="bsm-empty">
               <p className="bsm-empty-title">
